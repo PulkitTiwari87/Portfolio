@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Meriva';
+  src: url('./fonts/meriva-font/Meriva-Regular.woff2') format('woff2'),
+       url('./fonts/meriva-font/Meriva-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
