@@ -17,11 +17,19 @@ import {
     SiBootstrap,
     SiC,
     SiTypescript,
+    SiFirebase,
+    SiFastapi,
+    SiPlaywright,
+    SiStrapi,
+    SiGit,
+    SiVite,
+    SiLinux,
 } from "react-icons/si";
 import {
     TbBrandReact,
     TbBrandNodejs,
     TbBrandCss3,
+    TbBrandAzure,
 } from "react-icons/tb";
 
 interface TechnologiesProps {
@@ -61,19 +69,28 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
         { component: SiBootstrap, color: "text-purple-600", duration: 5 },
         { component: SiC, color: "text-blue-600", duration: 4 },
         { component: FaJava, color: "text-orange-600", duration: 6 },
+        // New Technologies from GitHub Projects
+        { component: SiFirebase, color: "text-yellow-600", duration: 5 },
+        { component: SiFastapi, color: "text-teal-500", duration: 6 },
+        { component: SiPlaywright, color: "text-green-600", duration: 4 },
+        { component: SiStrapi, color: "text-indigo-500", duration: 7 },
+        { component: TbBrandAzure, color: "text-blue-400", duration: 8 },
+        { component: SiGit, color: "text-orange-500", duration: 5 },
+        { component: SiVite, color: "text-purple-500", duration: 4 },
+        { component: SiLinux, color: "text-gray-400", duration: 6 },
     ];
 
     return (
         <div
             id="technologies"
-            className="relative w-full h-screen px-4 sm:px-6 lg:px-12 text-center transition-all duration-500 flex flex-col justify-center items-center"
+            className="relative w-full min-h-screen px-4 sm:px-6 lg:px-12 text-center transition-all duration-500 flex flex-col justify-center items-center py-20"
         >
             {/* Section Heading */}
             <motion.h1
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: -100 }}
                 transition={{ duration: 1.5 }}
-                className={`text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-bold mb-12 relative group inline-block transition-all ${
+                className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-20 tracking-tighter relative group inline-block transition-all ${
                     isDarkMode ? "text-white" : "text-black"
                 }`}
             >
@@ -87,13 +104,13 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
 
             {/* Icon container wrapper */}
             <div
-                className="w-full px-6 md:px-60 py-6" // Adjusted padding for responsiveness
+                className="w-full max-w-6xl px-6 py-6"
             >
                 <motion.div
                     whileInView={{ opacity: 1, x: 0 }}
                     initial={{ opacity: 0, x: -100 }}
                     transition={{ duration: 1.5 }}
-                    className="flex flex-wrap justify-center gap-x-6 gap-y-10"
+                    className="flex flex-wrap justify-center gap-x-10 gap-y-12"
                 >
                     {icons.map(({ component: Icon, color, duration }, index) => (
                         <motion.div
@@ -101,12 +118,12 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
                             initial="initial"
                             animate="animate"
                             variants={iconvariants(duration)}
-                            className={`flex justify-center items-center cursor-pointer transform transition-all hover:scale-110 hover:rotate-6 ${
-                                isDarkMode ? "hover:shadow-white" : "hover:shadow-black"
+                            className={`flex justify-center items-center cursor-pointer transform transition-all hover:scale-125 hover:rotate-6 ${
+                                isDarkMode ? "hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]" : "hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]"
                             }`}
                         >
                             <Icon
-                                className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl ${color}`}
+                                className={`text-6xl sm:text-7xl md:text-8xl ${color}`}
                             />
                         </motion.div>
                     ))}

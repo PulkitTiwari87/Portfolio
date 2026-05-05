@@ -7,7 +7,8 @@ import Footer from "./components/ui/animated-footer";
 import Hero from "./components/Hero";
 import Hello from "./components/Hello";
 import Background from "./components/Background"; // Your custom background component
-import Project from "./components/Project"; // Import the Project component
+import GitHubProjects from "./components/GitHubProjects"; // New component for live GitHub projects
+import Contact from "./components/Contact";
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -40,10 +41,10 @@ const App: React.FC = () => {
 
   const footerLeftLinks = [
     { href: "#Hero", label: "About" },
-    { href: "#technologies", label: "Technologies" },
-    { href: "#projects", label: "Projects" }, // Added this link for the Projects section
-    { href: "#experience", label: "Experience" },
-    { href: "#contact", label: "Contact" },
+    {href: "#technologies", label: "Technologies"},
+    {href: "#github", label: "GitHub"},
+    {href: "#experience", label: "Experience"},
+    {href: "#contact", label: "Contact"},
   ];
 
   const footerRightLinks = [
@@ -63,14 +64,15 @@ const App: React.FC = () => {
         <Hero isDarkMode={isDarkMode} />
         <AboutMe isDarkMode={isDarkMode} />
         <Technologies isDarkMode={isDarkMode} />
-        <Project isDarkMode={isDarkMode} /> {/* Add the Project component here */}
+        <GitHubProjects isDarkMode={isDarkMode} /> {/* Live GitHub projects */}
         <Experience isDarkMode={isDarkMode} />
-        {/* Add other sections here if needed */}
+        <Contact isDarkMode={isDarkMode} />
       </main>
       <Footer
         leftLinks={footerLeftLinks}
         rightLinks={footerRightLinks}
         copyrightText={`© ${new Date().getFullYear()} Pulkit Tiwari. All rights reserved.`}
+        isDarkMode={isDarkMode}
       />
     </div>
   );

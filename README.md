@@ -1,69 +1,39 @@
-# React + TypeScript + Vite
+# Pulkit Tiwari | Personal Portfolio v3
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, dynamic professional portfolio showcasing software engineering expertise, live GitHub contributions, and a quantified career journey.
 
-Currently, two official plugins are available:
+## 🚀 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Live GitHub Integration**: Dynamically fetches and merges repositories from `@PulkitTiwari87` (Main) and `@PulkitTiwari51`.
+- **Premium Image Hover Previews**: Interactive list view where hovering over any project displays its GitHub social preview image following the cursor.
+- **Modern Design System**: Dark-mode first aesthetic featuring high-contrast typography, glassmorphism, and smooth Framer Motion animations.
+- **Quantified Experience**: Detailed career milestones with measurable achievements (e.g., performance optimizations, outreach growth).
+- **Interactive Contact Section**: A minimalist, high-impact "Call to Action" section with a custom form and social hub.
 
-## Expanding the ESLint configuration
+## 🛠️ Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Core**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS (Monochromatic Theme)
+- **Animations**: Framer Motion, GSAP (ScrollTrigger)
+- **Integration**: GitHub REST API
+- **Tools**: FastAPI, Playwright, Strapi, Firebase, Azure
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+1. **Clone the repo**:
+   ```bash
+   git clone https://github.com/PulkitTiwari87/Portfolio_ver3.git
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3. **Run locally**:
+   ```bash
+   npm run dev
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📄 License
+© 2026 Pulkit Tiwari. All rights reserved.

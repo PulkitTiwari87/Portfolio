@@ -38,38 +38,39 @@ const useInView = (threshold = 0.2) => {
 const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
     const experiences: ExperienceItem[] = [
         {
-            year: "Jun 2025 – Present",
-            role: "Full-stack Developer",
-            company: "Weblicious (Internship)",
-            description: `Working on modern MERN stack applications in a hybrid role. Involved in front-end and back-end feature development, REST API integration, and UI enhancements for live projects.`,
-            technologies: ["MERN Stack", "MongoDB", "React.js", "Express.js", "Node.js"],
+            year: "May 2025 – Jul 2025",
+            role: "Full Stack Developer Intern",
+            company: "Weblicious",
+            description: `• Reduced page load time by 45% (2.5s to 1.4s) by optimizing backend APIs and frontend rendering logic.
+• Built scalable REST APIs handling concurrent requests, improving overall system throughput by 15%.
+• Improved database query performance by 30% through strategic indexing and query optimization.
+• Enhanced backend reliability via structured error handling and modular architecture using the MERN stack.`,
+            technologies: ["JavaScript", "Python", "Node.js", "Express.js", "MongoDB", "MySQL", "PostgreSQL"],
         },
         {
-            year: "Sep 2024 – Present",
-            role: "Public Relations & Sponsorship",
-            company: "UPES CSA Student Chapter",
-            description: `Head of Sponsorship (May 2025 – Present): Leading the Sponsorship and PR committee. Managing partnerships, proposals, and outreach to drive student initiatives and secure resources.
-
-Public Relation Lead (Mar 2025 – May 2025): Oversaw PR campaign execution, supervised the PR team, and ensured smooth communication for event success.
-
-PR Core Team Member (Sep 2024 – Mar 2025): Managed event promotion and communication. Contributed to content, design, and stakeholder engagement.`,
-            technologies: ["Sponsorship", "Public Relations", "Leadership", "Teamwork", "Communication"],
+            year: "Sep 2024 – Apr 2026",
+            role: "Public Relations & Sponsorship Head",
+            company: "Cloud Security Alliance (UPES)",
+            description: `• Led outreach and sponsorship initiatives for AWS Community Day Dehradun 2025, which hosted 1000+ attendees.
+• Increased event registrations by 55% through targeted PR campaigns, student chapter partnerships, and digital outreach.
+• Managed relationships with corporate sponsors and stakeholders to secure resources for student initiatives.`,
+            technologies: ["Leadership", "Public Relations", "Sponsorship", "Outreach", "Strategic Planning"],
         },
         {
             year: "Sep 2024 – Apr 2025",
             role: "Technical Team Member",
             company: "UPES-Hypervision",
-            description: `Contributed to the development and execution of technical activities and event solutions. Helped organize student tech meets and delivered scalable solutions using modern tech stacks.`,
-            technologies: ["JavaScript", "React.js", "Teamwork", "Communication"],
+            description: `• Contributed to the development of technical solutions for student meets and hackathons.
+• Delivered scalable frontend components and integrated backend services for internal club projects.`,
+            technologies: ["JavaScript", "React.js", "Teamwork", "Agile"],
         },
     ];
 
     return (
         <div
             id="experience"
-            className="px-4 sm:px-6 lg:px-12 py-20 w-full min-h-[100vh] flex flex-col items-center" // Adjusted width and min-height
+            className="px-4 sm:px-6 lg:px-12 py-20 w-full min-h-[100vh] flex flex-col items-center"
         >
-            {/* Inline keyframes using style tag */}
             <style>
                 {`
                     @keyframes fadeInUp {
@@ -83,14 +84,13 @@ PR Core Team Member (Sep 2024 – Mar 2025): Managed event promotion and communi
             </style>
 
             <h2
-                className={`text-3xl sm:text-4xl font-bold text-center mb-16 transition-all ${
-                    isDarkMode ? "text-white" : "text-black"
-                }`}
+                className={`text-4xl sm:text-5xl font-extrabold text-center mb-20 tracking-tighter ${isDarkMode ? "text-white" : "text-black"
+                    }`}
             >
                 Experience
             </h2>
 
-            <div className="flex flex-col space-y-16 w-full max-w-4xl"> {/* Added max-width for content */}
+            <div className="flex flex-col space-y-16 w-full max-w-4xl">
                 {experiences.map((exp, index) => {
                     const { ref, inView } = useInView();
 
@@ -98,17 +98,15 @@ PR Core Team Member (Sep 2024 – Mar 2025): Managed event promotion and communi
                         <div
                             key={index}
                             ref={ref}
-                            className={`transition-all duration-700 ${
-                                inView ? "animate-fade-in-up" : "opacity-0 translate-y-10"
-                            }`}
+                            className={`transition-all duration-700 ${inView ? "animate-fade-in-up" : "opacity-0 translate-y-10"
+                                }`}
                         >
-                            <div className="flex flex-col lg:flex-row px-4 lg:px-0 gap-4"> {/* Adjusted padding and flex direction */}
+                            <div className="flex flex-col lg:flex-row px-4 lg:px-0 gap-6">
                                 {/* Date Section */}
-                                <div className="w-full lg:w-1/4 text-center lg:text-left"> {/* Aligned left on desktop */}
+                                <div className="w-full lg:w-1/4 text-center lg:text-left">
                                     <p
-                                        className={`text-sm ${
-                                            isDarkMode ? "text-stone-400" : "text-gray-700"
-                                        }`}
+                                        className={`text-sm font-mono uppercase tracking-widest ${isDarkMode ? "text-stone-500" : "text-gray-400"
+                                            }`}
                                     >
                                         {exp.year}
                                     </p>
@@ -117,35 +115,31 @@ PR Core Team Member (Sep 2024 – Mar 2025): Managed event promotion and communi
                                 {/* Content Section */}
                                 <div className="w-full lg:w-3/4">
                                     <h3
-                                        className={`text-lg font-semibold mb-2 ${
-                                            isDarkMode ? "text-white" : "text-black"
-                                        }`}
-                                    >
-                                        {exp.role} –{" "}
-                                        <span
-                                            className={`ml-1 text-sm ${
-                                                isDarkMode ? "text-stone-400" : "text-gray-700"
+                                        className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-black"
                                             }`}
+                                    >
+                                        {exp.role}
+                                        <span
+                                            className={`block text-lg font-medium mt-1 ${isDarkMode ? "text-blue-400" : "text-blue-600"
+                                                }`}
                                         >
                                             {exp.company}
                                         </span>
                                     </h3>
                                     <p
-                                        className={`text-sm whitespace-pre-line ${
-                                            isDarkMode ? "text-stone-300" : "text-gray-800"
-                                        }`}
+                                        className={`text-base leading-relaxed whitespace-pre-line ${isDarkMode ? "text-stone-400" : "text-gray-600"
+                                            }`}
                                     >
                                         {exp.description}
                                     </p>
-                                    <div className="flex flex-wrap gap-2 mt-3">
+                                    <div className="flex flex-wrap gap-2 mt-6">
                                         {exp.technologies.map((tech, idx) => (
                                             <span
                                                 key={idx}
-                                                className={`rounded px-2 py-1 text-xs font-medium ${
-                                                    isDarkMode
-                                                        ? "bg-stone-900 text-stone-300"
-                                                        : "bg-gray-200 text-gray-900"
-                                                }`}
+                                                className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${isDarkMode
+                                                        ? "bg-stone-900 text-stone-400 border border-stone-800"
+                                                        : "bg-gray-100 text-gray-700 border border-gray-200"
+                                                    }`}
                                             >
                                                 {tech}
                                             </span>

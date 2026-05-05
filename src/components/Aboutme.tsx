@@ -22,12 +22,12 @@ const AboutMe: React.FC<AboutMeProps> = ({ isDarkMode }) => {
 
     // Object containing different descriptions based on the selected role
     const content: Content = {
-        anyone: "I turn caffeine and curiosity into clever code, bold ideas, and digital experiences that make people pause—and say wow.",
-        recruiter: "I’m a third-year CSE student with a passion for solving real-world problems through innovative design and full-stack development.",
-        designDirector: "I explore bold, unconventional ideas that challenge visual norms and turn design into memorable experiences.",
-        productDesigner: "With a strong design instinct and tech foundation, I craft interfaces that are as intuitive as they are impactful.",
-        productManager: "I thrive at the intersection of design, development, and collaboration—bringing visionary ideas to life through structured execution.",
-        engineer: "As a CS student with a creative mindset, I ensure that every design I touch is not only visually distinct but also technically sound."
+        anyone: "I am Pulkit Tiwari, a third‑year Computer Science & Engineering student passionate about full‑stack development, UI/UX design, and building performant web applications.",
+        recruiter: "I am actively seeking software engineering roles where I can contribute to innovative products and grow my technical expertise.",
+        designDirector: "I love crafting bold visual experiences that challenge conventions and communicate stories through design.",
+        productDesigner: "Combining a strong design instinct with solid engineering foundations, I build intuitive interfaces that delight users.",
+        productManager: "I thrive at the intersection of design, development, and collaboration, turning ideas into shipped products.",
+        engineer: "My CS background equips me to write clean, efficient code while maintaining high design standards."
     };
 
     // Ref for the container that VariableProximity will operate within

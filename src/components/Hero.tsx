@@ -4,8 +4,8 @@ import { motion } from "framer-motion"; // Assuming framer-motion is available i
 // Placeholder image for the profile avatar
 const PLACEHOLDER_AVATAR = "https://placehold.co/200x200/FF5733/FFFFFF?text=Profile";
 import Profile from "../assets/Profile.jpg";
-// Placeholder for resume PDF
-const PLACEHOLDER_RESUME_PDF = "https://www.africau.edu/images/default/sample.pdf";
+// Résumé PDF (served from /public)
+const RESUME_PDF = "/Pulkit_Tiwari_SDE.pdf";
 
 import ProfileCard from "./ui/ProfileCard";
 
@@ -129,7 +129,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
           <div className="mt-5">
             <motion.a
               variants={childVariants}
-              href={PLACEHOLDER_RESUME_PDF}
+              href={RESUME_PDF}
               target="_blank"
               rel="noopener noreferrer"
               className={`px-4 py-2 font-semibold rounded-md transition-all ${

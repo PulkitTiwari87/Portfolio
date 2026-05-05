@@ -121,65 +121,6 @@ const Footer: React.FC<FooterProps> = ({
         >
             {/* Main content container for consistent padding and centering */}
             <div className="container mx-auto px-6 pt-12 pb-24">
-                {/* Contact Form - Styling remains static (dark mode themed) */}
-                <div className="mb-12">
-                    {/* Contact Me heading - explicitly white in dark mode, black in light mode */}
-                    <h2 className={`text-3xl font-bold mb-6 text-center ${isDarkMode ? 'text-white' : 'text-gray-400'}`}>Contact Me</h2>
-                    {/* Shadow box added around the form */}
-                    <div
-                        className="bg-zinc-800 p-8 rounded-lg shadow-lg shadow-white/20 w-full max-w-xl mx-auto"
-                    >
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Full Name"
-                                required
-                                className="px-4 py-2 rounded bg-zinc-700 text-white border border-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:outline-none shadow-md shadow-white/10"
-                            />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address"
-                                required
-                                className="px-4 py-2 rounded bg-zinc-700 text-white border border-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:outline-none shadow-md shadow-white/10"
-                            />
-                            <input
-                                type="tel"
-                                name="mobile"
-                                placeholder="Mobile Number"
-                                required
-                                className="px-4 py-2 rounded bg-zinc-700 text-white border border-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:outline-none shadow-md shadow-white/10"
-                            />
-                            <input
-                                type="text"
-                                name="subject"
-                                placeholder="Subject"
-                                required
-                                className="px-4 py-2 rounded bg-zinc-700 text-white border border-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:outline-none shadow-md shadow-white/10"
-                            />
-                            <textarea
-                                name="message"
-                                placeholder="Message (optional)"
-                                rows={4}
-                                className="md:col-span-2 px-4 py-2 rounded bg-zinc-700 text-white border border-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:outline-none shadow-md shadow-white/10"
-                            ></textarea>
-                            <button
-                                type="submit"
-                                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 col-span-full md:col-span-1"
-                            >
-                                Send Message
-                            </button>
-                            {/* Display submission result message - This text is general footer text */}
-                            {result && (
-                                <p className={`text-sm col-span-full ${result.includes("Successfully") ? "text-green-400" : "text-red-400"}`}>
-                                    {result}
-                                </p>
-                            )}
-                        </form>
-                    </div>
-                </div>
-
                 {/* Footer Content - Centralized */}
                 <div className="flex flex-col w-full md:flex-row items-center text-center justify-center md:gap-x-16 px-4 md:px-30 gap-8">
                     <div className="space-y-1 md:w-1/3 text-center ">
