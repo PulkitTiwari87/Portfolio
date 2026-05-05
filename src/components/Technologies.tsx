@@ -19,7 +19,6 @@ import {
     SiTypescript,
     SiFirebase,
     SiFastapi,
-    SiPlaywright,
     SiStrapi,
     SiGit,
     SiVite,
@@ -72,7 +71,6 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
         // New Technologies from GitHub Projects
         { component: SiFirebase, color: "text-yellow-600", duration: 5 },
         { component: SiFastapi, color: "text-teal-500", duration: 6 },
-        { component: SiPlaywright, color: "text-green-600", duration: 4 },
         { component: SiStrapi, color: "text-indigo-500", duration: 7 },
         { component: TbBrandAzure, color: "text-blue-400", duration: 8 },
         { component: SiGit, color: "text-orange-500", duration: 5 },
