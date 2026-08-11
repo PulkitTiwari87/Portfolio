@@ -38,31 +38,30 @@ const useInView = (threshold = 0.2) => {
 const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
     const experiences: ExperienceItem[] = [
         {
-            year: "May 2025 – Jul 2025",
-            role: "Full Stack Developer Intern",
-            company: "Weblicious",
-            description: `• Reduced page load time by 45% (2.5s to 1.4s) by optimizing backend APIs and frontend rendering logic.
-• Built scalable REST APIs handling concurrent requests, improving overall system throughput by 15%.
-• Improved database query performance by 30% through strategic indexing and query optimization.
-• Enhanced backend reliability via structured error handling and modular architecture using the MERN stack.`,
-            technologies: ["JavaScript", "Python", "Node.js", "Express.js", "MongoDB", "MySQL", "PostgreSQL"],
+            year: "Jun 2026 – Present",
+            role: "Software Engineering Intern",
+            company: "Ascendion, Bengaluru",
+            description: `• Built a 3-agent CrewAI pipeline (AAVA platform) on AWS Bedrock using Claude models to automate resume reformatting: structured extraction -> formatted rendering -> Azure Blob Storage upload via SAS-token authentication.
+• Created an output validation agent using bias guardrails and knowledge-base-grounded scoring to automate compliance checks and generate branded reports across 10+ Generative AI applications.
+• Delivered 10+ Generative AI applications, automation tools, and agents using Python and LLM APIs, integrated through REST APIs and microservices.
+• Worked with software engineering and DevOps teams to deliver 7+ production features through CI/CD pipelines, improving deployment reliability and release efficiency.`,
+            technologies: ["Python", "CrewAI", "AWS Bedrock", "Claude LLM", "Azure Blob Storage", "REST APIs", "Microservices", "CI/CD"],
         },
         {
-            year: "Sep 2024 – Apr 2026",
+            year: "Jun 2025 – Jul 2025",
+            role: "Full Stack Developer Intern",
+            company: "Weblicious, Dehradun",
+            description: `• Developed client-facing web applications using React.js, Node.js, and MongoDB (10+ Schema) with an API-first architecture.
+• Implemented REST APIs and backend workflows, improving data accessibility and reducing API response time by 25%.`,
+            technologies: ["React.js", "Node.js", "MongoDB", "REST APIs", "MERN Stack"],
+        },
+        {
+            year: "Sep 2024 – May 2026",
             role: "Public Relations & Sponsorship Head",
             company: "Cloud Security Alliance (UPES)",
-            description: `• Led outreach and sponsorship initiatives for AWS Community Day Dehradun 2025, which hosted 1000+ attendees.
-• Increased event registrations by 55% through targeted PR campaigns, student chapter partnerships, and digital outreach.
-• Managed relationships with corporate sponsors and stakeholders to secure resources for student initiatives.`,
-            technologies: ["Leadership", "Public Relations", "Sponsorship", "Outreach", "Strategic Planning"],
-        },
-        {
-            year: "Sep 2024 – Apr 2025",
-            role: "Technical Team Member",
-            company: "UPES-Hypervision",
-            description: `• Contributed to the development of technical solutions for student meets and hackathons.
-• Delivered scalable frontend components and integrated backend services for internal club projects.`,
-            technologies: ["JavaScript", "React.js", "Teamwork", "Agile"],
+            description: `• Led a team of 30+ members organizing university-level technical events including hackathons, WebGenesis, and Funtopia 5.0, from concept through delivery.
+• Directed sponsorship outreach for AWS Community Day Dehradun 2025 (1,000+ attendees), securing industry collaboration including GitHub.`,
+            technologies: ["Leadership", "Public Relations", "Sponsorship", "Outreach", "Event Management"],
         },
     ];
 

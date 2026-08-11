@@ -41,10 +41,11 @@ const App: React.FC = () => {
 
   const footerLeftLinks = [
     { href: "#Hero", label: "About" },
-    {href: "#technologies", label: "Technologies"},
-    {href: "#github", label: "GitHub"},
-    {href: "#experience", label: "Experience"},
-    {href: "#contact", label: "Contact"},
+    { href: "#technologies", label: "Technologies" },
+    { href: "#projects", label: "Projects" },
+    { href: "#github", label: "GitHub" },
+    { href: "#experience", label: "Experience" },
+    { href: "#contact", label: "Contact" },
   ];
 
   const footerRightLinks = [

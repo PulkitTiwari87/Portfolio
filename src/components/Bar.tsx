@@ -77,7 +77,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
 
                 {/* Navigation links */}
                 <nav className="flex flex-col gap-1 pl-12">
-                    {["Intro", "Technologies", "GitHub", "Experience", "Contact"].map((item, index) => (
+                    {["Intro", "Technologies", "Projects", "GitHub", "Experience", "Contact"].map((item, index) => (
                         <Link
                             key={index}
                             to={item === "Intro" ? "Hero" : item.toLowerCase().replace(/\s+/g, "-")} // "Intro" links to "Hero" section, others use their lowercased, hyphenated name

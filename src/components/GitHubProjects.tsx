@@ -41,6 +41,8 @@ const REPO_META: Record<string, { displayName: string; description: string }> = 
   Dark_Web_Monitor: { displayName: 'Dark Web Monitor', description: 'Real-time threat intelligence dashboard monitoring dark-web data leaks.' },
   GDriveX: { displayName: 'GDriveX', description: 'Google Drive clone built with React, Firebase & Tailwind CSS.' },
   Orbital_Stock: { displayName: 'Orbital Stock', description: 'Real-time stock tracker with orbital data visualization.' },
+  SOAR: { displayName: 'SOAR Intelligence', description: 'ML-Driven Security Automation Platform. Engineered an event-driven microservices system using Wazuh SIEM, Cortex, TheHive, Redis, and Docker for automated incident detection, orchestration, and response.' },
+  'SOAR-Intelligence': { displayName: 'SOAR Intelligence', description: 'ML-Driven Security Automation Platform. Engineered an event-driven microservices system using Wazuh SIEM, Cortex, TheHive, Redis, and Docker for automated incident detection, orchestration, and response.' },
 };
 
 const GitHubProjectItem: React.FC<{ repo: Repo; index: number; isDarkMode: boolean }> = ({
@@ -170,15 +172,49 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
 
   useEffect(() => {
     fetchAllRepos()
-      .then(setRepos)
+      .then(fetchedRepos => {
+        let finalRepos = [...fetchedRepos];
+
+        // Ensure GDriveX is in the list of repos
+        const hasGDriveX = finalRepos.some(r => r.name.toLowerCase() === 'gdrivex');
+        if (!hasGDriveX) {
+          const mockGDrive: Repo = {
+            id: 999998,
+            name: 'GDriveX',
+            full_name: 'PulkitTiwari51/GDriveX',
+            description: 'Google Drive clone built with React, Firebase & Tailwind CSS.',
+            html_url: 'https://github.com/PulkitTiwari51/GDriveX',
+            stargazers_count: 0,
+            forks_count: 0,
+            language: 'JavaScript',
+            fork: false,
+            updated_at: new Date().toISOString(),
+            homepage: null,
+            owner: {
+              login: 'PulkitTiwari51',
+              avatar_url: 'https://github.com/PulkitTiwari51.png',
+            }
+          };
+          finalRepos.unshift(mockGDrive);
+        }
+
+        setRepos(finalRepos);
+      })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
-  // Derive unique languages for filter buttons
-  const languages = ['All', ...Array.from(new Set(repos.map(r => r.language).filter(Boolean) as string[]))];
+  const FLAGSHIP_REPOS = ['SOAR', 'SOAR-Intelligence', 'GDriveX'];
 
-  const filtered = filter === 'All' ? repos : repos.filter(r => r.language === filter);
+  // Derive unique languages for filter buttons
+  const languages = Array.from(new Set(repos.map(r => r.language).filter(Boolean) as string[]));
+  const filterOptions = ['All', 'Flagship', ...languages];
+
+  const filtered = filter === 'All'
+    ? repos
+    : filter === 'Flagship'
+    ? repos.filter(r => FLAGSHIP_REPOS.includes(r.name) || r.name.toLowerCase().includes('soar'))
+    : repos.filter(r => r.language === filter);
 
   return (
     <div
@@ -205,12 +241,12 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
         {/* Language Filter */}
         {!loading && !error && (
           <div className="flex flex-wrap justify-center gap-3 mb-16">
-            {languages.map(lang => (
+            {filterOptions.map(opt => (
               <button
-                key={lang}
-                onClick={() => setFilter(lang)}
+                key={opt}
+                onClick={() => setFilter(opt)}
                 className={`text-sm px-6 py-2 rounded-full font-bold uppercase tracking-widest transition-all duration-300
-                  ${filter === lang
+                  ${filter === opt
                     ? isDarkMode
                       ? 'bg-white text-black scale-110 shadow-[0_0_20px_rgba(255,255,255,0.3)]'
                       : 'bg-black text-white scale-110 shadow-[0_0_20px_rgba(0,0,0,0.2)]'
@@ -219,7 +255,7 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
                     : 'border border-gray-200 text-gray-400 hover:text-black hover:border-gray-400'
                   }`}
               >
-                {lang}
+                {opt}
               </button>
             ))}
           </div>
@@ -272,23 +308,23 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
             className="flex flex-col sm:flex-row justify-center gap-6 mt-24"
           >
             <a
-              href="https://github.com/PulkitTiwari87"
+              href="https://github.com/PulkitTiwari51"
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 px-8 py-4 rounded-xl text-sm font-black uppercase tracking-tighter transition-all
                 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}
             >
-              <span>Main Profile (@PulkitTiwari87)</span>
+              <span>Main Profile (@PulkitTiwari51)</span>
               <span className="opacity-40 group-hover:translate-x-1 transition-transform">→</span>
             </a>
             <a
-              href="https://github.com/PulkitTiwari51"
+              href="https://github.com/PulkitTiwari87"
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 px-8 py-4 rounded-xl text-sm font-black uppercase tracking-tighter transition-all border
                 ${isDarkMode ? 'border-gray-700 text-white hover:bg-gray-900' : 'border-gray-200 text-black hover:bg-gray-50'}`}
             >
-              <span>Secondary Profile (@PulkitTiwari51)</span>
+              <span>Secondary Profile (@PulkitTiwari87)</span>
               <span className="opacity-40 group-hover:translate-x-1 transition-transform">→</span>
             </a>
           </motion.div>

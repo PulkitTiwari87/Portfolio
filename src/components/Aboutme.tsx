@@ -22,12 +22,23 @@ const AboutMe: React.FC<AboutMeProps> = ({ isDarkMode }) => {
 
     // Object containing different descriptions based on the selected role
     const content: Content = {
-        anyone: "I am Pulkit Tiwari, a third‑year Computer Science & Engineering student passionate about full‑stack development, UI/UX design, and building performant web applications.",
-        recruiter: "I am actively seeking software engineering roles where I can contribute to innovative products and grow my technical expertise.",
-        designDirector: "I love crafting bold visual experiences that challenge conventions and communicate stories through design.",
-        productDesigner: "Combining a strong design instinct with solid engineering foundations, I build intuitive interfaces that delight users.",
-        productManager: "I thrive at the intersection of design, development, and collaboration, turning ideas into shipped products.",
-        engineer: "My CS background equips me to write clean, efficient code while maintaining high design standards."
+        anyone:
+            "I’m Pulkit Tiwari, a final-year Computer Science student who enjoys turning slightly ambitious ideas into things that actually run. I work across full-stack development, AI, and cybersecurity — basically, I like knowing what happens from the UI all the way down to the backend.",
+
+        recruiter:
+            "I’m currently looking for software engineering opportunities where I can build real products, solve meaningful problems, and keep getting better at the fundamentals. I bring hands-on internship experience, strong full-stack foundations, and a growing focus on AI and cybersecurity.",
+
+        engineer:
+            "I enjoy building systems end-to-end — React on the front, Python or Node on the back, databases underneath, and APIs holding everything together. Recently, I’ve also been working with AI agents, LLMs, and cloud infrastructure. Clean code is the goal; mysterious bugs are apparently part of the internship.",
+
+        ai:
+            "I’m particularly interested in AI engineering and agentic systems. I’ve worked with LLMs, RAG, CrewAI, LangGraph, AWS Bedrock, prompt engineering, and AI-output guardrails — with a strong preference for building systems that do something useful rather than just having an impressive demo.",
+
+        cybersecurity:
+            "Cybersecurity is where my Computer Science background gets a little paranoid — in a useful way. I’ve worked with security automation, Wazuh, TheHive, Cortex, Redis, threat detection, ML-based triage, and incident-response workflows. I like building software while also thinking about how it could fail, be abused, or be made more resilient.",
+
+        builder:
+            "I like learning by building. Some weeks that means a full-stack application, some weeks an AI agent, and some weeks wondering why Docker suddenly decided it has feelings. My goal is simple: keep shipping, keep learning, and build software I’d be proud to put my name on."
     };
 
     // Ref for the container that VariableProximity will operate within

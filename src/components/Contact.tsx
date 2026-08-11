@@ -12,12 +12,14 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const form = e.currentTarget;
         setLoading(true);
         setResult("Sending...");
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData(form);
 
-        // Using Web3Forms for submission (keep the logic similar to original but with better UI)
-        formData.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY");
+        // Using Web3Forms for submission
+        const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "7bae02d0-5ae2-4090-9fd1-674ecb31fdf6";
+        formData.append("access_key", accessKey);
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
@@ -27,7 +29,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             const data = await response.json();
             if (data.success) {
                 setResult("Message Sent Successfully!");
-                e.currentTarget.reset();
+                form.reset();
             } else {
                 setResult(data.message || "Something went wrong.");
             }
@@ -89,7 +91,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                             <div className="flex flex-wrap gap-6">
                                 {[
                                     { icon: <FaLinkedinIn />, href: "https://linkedin.com/in/pulkittiwari51", label: "LinkedIn" },
-                                    { icon: <FaGithub />, href: "https://github.com/PulkitTiwari87", label: "GitHub" },
+                                    { icon: <FaGithub />, href: "https://github.com/PulkitTiwari51", label: "GitHub" },
                                     // { icon: <FaTwitter />, href: "https://twitter.com", label: "Twitter" },
                                     { icon: <FaInstagram />, href: "https://instagram.com/_pulkittiwari", label: "Instagram" },
                                 ].map((social, idx) => (
