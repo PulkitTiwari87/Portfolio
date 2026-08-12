@@ -84,7 +84,7 @@ const AboutMe: React.FC<AboutMeProps> = ({ isDarkMode }) => {
                         {/* Dynamic Content: Displays the description based on the selected role */}
                         {/* CHANGED <p> TO <div> TO AVOID HYDRATION ERROR */}
                         <div
-                            className="text-xl sm:text-2xl md:text-3xl lg:text-[3rem] font-light leading-relaxed w-full transition-all duration-500 px-40" // `px-40` might be too much for smaller screens
+                            className="text-xl sm:text-2xl md:text-3xl lg:text-[3rem] font-light leading-relaxed w-full transition-all duration-500 px-4 sm:px-10 md:px-16 lg:px-24 xl:px-40"
                             ref={containerRef} // This is the main container for mouse tracking
                             style={{ position: 'relative', fontFamily: 'Outfit' }} // Needs position relative for child absolute positioning context if you were to add overlays etc.
                         >

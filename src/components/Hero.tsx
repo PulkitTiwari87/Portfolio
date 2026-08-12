@@ -61,12 +61,25 @@ const childVariants = {
 };
 
 const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://platform.linkedin.com/badges/js/profile.js";
+    script.async = true;
+    script.defer = true;
+    script.type = "text/javascript";
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <div id="Hero" className="mt-10 mb-10 px-4 sm:px-6 md:px-10 lg:px-30">
       <div className="flex flex-col lg:flex-row">
         {/* Empty div for spacing on larger screens */}
 
-        <div className="w-full px-40">
+        <div className="w-full px-4 sm:px-10 md:px-16 lg:px-24 xl:px-40">
           <div id="intro" className="pb-4 lg:mb-36">
             <div className="flex flex-col-reverse lg:flex-row items-center gap-8" style={{ fontFamily: 'Outfit' }}>
 
@@ -149,6 +162,26 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
                       View Resume
                     </motion.a>
                   </div>
+
+                  {/* LinkedIn Profile Badge */}
+                  <motion.div variants={childVariants} className="mt-6 flex justify-center lg:justify-start">
+                    <div
+                      className="badge-base LI-profile-badge"
+                      data-locale="en_US"
+                      data-size="large"
+                      data-theme={isDarkMode ? "dark" : "light"}
+                      data-type="HORIZONTAL"
+                      data-vanity="pulkittiwari51"
+                      data-version="v1"
+                    >
+                      <a
+                        className="badge-base__link LI-simple-link"
+                        href="https://in.linkedin.com/in/pulkittiwari51?trk=profile-badge"
+                      >
+                        Pulkit Tiwari
+                      </a>
+                    </div>
+                  </motion.div>
                 </motion.div>
               </div>
 
