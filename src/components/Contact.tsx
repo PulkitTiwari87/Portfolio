@@ -91,8 +91,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                             <div className="flex flex-wrap gap-6">
                                 {[
                                     { icon: <FaLinkedinIn />, href: "https://linkedin.com/in/pulkittiwari51", label: "LinkedIn" },
-                                    { icon: <FaGithub />, href: "https://github.com/PulkitTiwari51", label: "GitHub" },
-                                    // { icon: <FaTwitter />, href: "https://twitter.com", label: "Twitter" },
+                                    { icon: <FaGithub />, href: "https://github.com/PulkitTiwari87", label: "GitHub" },
                                     { icon: <FaInstagram />, href: "https://instagram.com/_pulkittiwari", label: "Instagram" },
                                 ].map((social, idx) => (
                                     <a

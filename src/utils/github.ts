@@ -1,9 +1,9 @@
 import { Repo } from '../types';
 
-const GITHUB_USERNAMES = ['PulkitTiwari51', 'PulkitTiwari87'];
+const GITHUB_USERNAMES = ['PulkitTiwari87', 'PulkitTiwari51'];
 
 // Repos to exclude (profile READMEs, forks, etc.)
-const EXCLUDED_REPOS = ['PulkitTiwari51', 'PulkitTiwari87', 'Get-Set-Git', 'WHTEGOD', 'README'];
+const EXCLUDED_REPOS = ['PulkitTiwari87', 'PulkitTiwari51', 'Get-Set-Git', 'WHTEGOD', 'README'];
 
 export async function fetchRepos(username: string): Promise<Repo[]> {
   const res = await fetch(

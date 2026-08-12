@@ -181,9 +181,9 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
           const mockGDrive: Repo = {
             id: 999998,
             name: 'GDriveX',
-            full_name: 'PulkitTiwari51/GDriveX',
+            full_name: 'PulkitTiwari87/GDriveX',
             description: 'Google Drive clone built with React, Firebase & Tailwind CSS.',
-            html_url: 'https://github.com/PulkitTiwari51/GDriveX',
+            html_url: 'https://github.com/PulkitTiwari87/GDriveX',
             stargazers_count: 0,
             forks_count: 0,
             language: 'JavaScript',
@@ -191,8 +191,8 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
             updated_at: new Date().toISOString(),
             homepage: null,
             owner: {
-              login: 'PulkitTiwari51',
-              avatar_url: 'https://github.com/PulkitTiwari51.png',
+              login: 'PulkitTiwari87',
+              avatar_url: 'https://github.com/PulkitTiwari87.png',
             }
           };
           finalRepos.unshift(mockGDrive);
@@ -308,23 +308,23 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
             className="flex flex-col sm:flex-row justify-center gap-6 mt-24"
           >
             <a
-              href="https://github.com/PulkitTiwari51"
+              href="https://github.com/PulkitTiwari87"
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 px-8 py-4 rounded-xl text-sm font-black uppercase tracking-tighter transition-all
                 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}
             >
-              <span>Main Profile (@PulkitTiwari51)</span>
+              <span>Main Profile (@PulkitTiwari87)</span>
               <span className="opacity-40 group-hover:translate-x-1 transition-transform">→</span>
             </a>
             <a
-              href="https://github.com/PulkitTiwari87"
+              href="https://github.com/PulkitTiwari51"
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 px-8 py-4 rounded-xl text-sm font-black uppercase tracking-tighter transition-all border
                 ${isDarkMode ? 'border-gray-700 text-white hover:bg-gray-900' : 'border-gray-200 text-black hover:bg-gray-50'}`}
             >
-              <span>Secondary Profile (@PulkitTiwari87)</span>
+              <span>Secondary Profile (@PulkitTiwari51)</span>
               <span className="opacity-40 group-hover:translate-x-1 transition-transform">→</span>
             </a>
           </motion.div>

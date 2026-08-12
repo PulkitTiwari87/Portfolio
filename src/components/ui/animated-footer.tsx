@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 
 interface LinkItem {
     href: string;
@@ -156,17 +156,39 @@ const Footer: React.FC<FooterProps> = ({
                         <h4 className={`text-md font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-400'}`}>Follow Me</h4>
                         <div className="flex gap-4 text-lg justify-center ">
                             {/* Social Media Icons - explicitly white in dark mode, black in light mode */}
-                            <a href="#" className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}>
-                                <FaFacebookF />
+                            <a
+                                href="https://github.com/PulkitTiwari87"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}
+                                aria-label="GitHub"
+                            >
+                                <FaGithub />
                             </a>
-                            <a href="#" className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}>
-                                <FaTwitter />
+                            <a
+                                href="https://linkedin.com/in/pulkittiwari51"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}
+                                aria-label="LinkedIn"
+                            >
+                                <FaLinkedinIn />
                             </a>
-                            <a href="#" className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}>
+                            <a
+                                href="https://instagram.com/_pulkittiwari"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}
+                                aria-label="Instagram"
+                            >
                                 <FaInstagram />
                             </a>
-                            <a href="#" className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}>
-                                <FaLinkedinIn />
+                            <a
+                                href="mailto:tpulkit87@gmail.com"
+                                className={`${isDarkMode ? 'text-white hover:text-sky-400' : 'text-gray-400 hover:text-blue-600'} transition duration-200`}
+                                aria-label="Email"
+                            >
+                                <FaEnvelope />
                             </a>
                         </div>
                     </div>
