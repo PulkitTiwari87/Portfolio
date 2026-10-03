@@ -8,10 +8,28 @@ import Hero from "./components/Hero";
 import Hello from "./components/Hello";
 import Background from "./components/Background"; // Your custom background component
 import GitHubProjects from "./components/GitHubProjects"; // New component for live GitHub projects
+import Activity from "./components/Activity"; // Last-30-days GitHub + LeetCode heatmaps
 import Contact from "./components/Contact";
+import AppleDesign from "./components/AppleDesign";
+
+import FrameDesign from "./components/FrameDesign";
+import NerdDesign from "./components/NerdDesign";
+import BlahhhDesign from "./components/BlahhhDesign";
+
+const APPLE_ROUTE = "#/designs/apple";
+const FRAME_ROUTE = "#/designs/frame";
+const NERD_ROUTE = "#/designs/nerd";
+const BLAHHH_ROUTE = "#/designs/blahhh";
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [hash, setHash] = useState<string>(window.location.hash);
+
+  useEffect(() => {
+    const onHashChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   // Effect to apply/remove dark mode class on body and persist preference
   useEffect(() => {
@@ -39,11 +57,60 @@ const App: React.FC = () => {
     });
   };
 
+  if (hash === APPLE_ROUTE) {
+    return (
+      <AppleDesign
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+        onExit={() => {
+          window.location.hash = "";
+        }}
+      />
+    );
+  }
+
+  if (hash === FRAME_ROUTE) {
+    return (
+      <FrameDesign
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+        onExit={() => {
+          window.location.hash = "";
+        }}
+      />
+    );
+  }
+
+  if (hash === NERD_ROUTE) {
+    return (
+      <NerdDesign
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+        onExit={() => {
+          window.location.hash = "";
+        }}
+      />
+    );
+  }
+
+  if (hash === BLAHHH_ROUTE) {
+    return (
+      <BlahhhDesign
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+        onExit={() => {
+          window.location.hash = "";
+        }}
+      />
+    );
+  }
+
   const footerLeftLinks = [
     { href: "#Hero", label: "About" },
     { href: "#technologies", label: "Technologies" },
     { href: "#projects", label: "Projects" },
     { href: "#github", label: "GitHub" },
+    { href: "#activity", label: "Activity" },
     { href: "#experience", label: "Experience" },
     { href: "#contact", label: "Contact" },
   ];
@@ -66,6 +133,9 @@ const App: React.FC = () => {
         <AboutMe isDarkMode={isDarkMode} />
         <Technologies isDarkMode={isDarkMode} />
         <GitHubProjects isDarkMode={isDarkMode} /> {/* Live GitHub projects */}
+        <div id="activity">
+          <Activity variant="site" />
+        </div>
         <Experience isDarkMode={isDarkMode} />
         <Contact isDarkMode={isDarkMode} />
       </main>

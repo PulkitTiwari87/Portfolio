@@ -1,6 +1,10 @@
-import { Repo } from '../types';
+import type { Repo } from '../types';
+import { SECONDARY_FEATURED } from '../data/repos';
 
-const GITHUB_USERNAMES = ['PulkitTiwari87', 'PulkitTiwari51'];
+// PulkitTiwari87 is the main profile. PulkitTiwari51 is secondary: none of its repos are
+// listed unless named in SECONDARY_FEATURED (src/data/repos.ts).
+const PRIMARY_USERNAME = 'PulkitTiwari87';
+const SECONDARY_USERNAME = 'PulkitTiwari51';
 
 // Repos to exclude (profile READMEs, forks, etc.)
 const EXCLUDED_REPOS = ['PulkitTiwari87', 'PulkitTiwari51', 'Get-Set-Git', 'WHTEGOD', 'README'];
@@ -16,11 +20,14 @@ export async function fetchRepos(username: string): Promise<Repo[]> {
 }
 
 export async function fetchAllRepos(): Promise<Repo[]> {
-  const results = await Promise.allSettled(GITHUB_USERNAMES.map(fetchRepos));
-  const combined: Repo[] = [];
-  for (const result of results) {
-    if (result.status === 'fulfilled') {
-      combined.push(...result.value);
+  const combined = await fetchRepos(PRIMARY_USERNAME);
+  // Only hit the secondary profile (and the API rate limit) if something is whitelisted.
+  if (SECONDARY_FEATURED.length > 0) {
+    try {
+      const secondary = await fetchRepos(SECONDARY_USERNAME);
+      combined.push(...secondary.filter(r => SECONDARY_FEATURED.includes(r.name)));
+    } catch {
+      // The secondary profile is optional; keep the primary list.
     }
   }
   // Sort by most recently updated

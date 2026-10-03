@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useEffect, MutableRefObject, CSSProperties, HTMLAttributes } from "react";
+import { forwardRef, useMemo, useRef, useEffect, type MutableRefObject, type CSSProperties, type HTMLAttributes } from "react";
 import { motion } from "framer-motion";
 
 // Custom hook for requestAnimationFrame loop
@@ -188,7 +188,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
             onClick={onClick}
             style={{
                 display: "inline", // Maintain inline flow
-                fontFamily: '"Roboto Flex", sans-serif',
+                fontFamily: 'var(--font-sans)',
                 ...style,
             }}
             className={className}

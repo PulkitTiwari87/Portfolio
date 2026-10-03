@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion"; // Assuming framer-motion is available in the user's environment
 
-// Placeholder image for the profile avatar
-const PLACEHOLDER_AVATAR = "https://placehold.co/200x200/FF5733/FFFFFF?text=Profile";
-import Profile from "../assets/Profile.jpg";
+import Profile from "../assets/profile-portrait.jpg";
 // Résumé PDF (served from /public)
 const RESUME_PDF = "/Pulkit_Tiwari_SDE.pdf";
 
@@ -22,12 +20,13 @@ const ShinyText: React.FC<ShinyTextProps> = ({ text, disabled = false, speed = 5
   const animationDuration = `${speed}s`;
   return (
     <div
-      className={`text-[#b5b5b5a4] bg-clip-text inline-block ${disabled ? '' : 'animate-shine'} ${className}`}
+      className={`hero-shine bg-clip-text inline-block ${className}`}
       style={{
         backgroundImage: 'linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 60%)',
         backgroundSize: '200% 100%',
         WebkitBackgroundClip: 'text',
-        animationDuration: animationDuration,
+        // `animate-shine` was never generated (Tailwind v4 ignores tailwind.config.js), so animate directly.
+        animation: disabled ? undefined : `hero-shine ${animationDuration} linear infinite`,
       }}
     >
       {text}
@@ -61,36 +60,24 @@ const childVariants = {
 };
 
 const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://platform.linkedin.com/badges/js/profile.js";
-    script.async = true;
-    script.defer = true;
-    script.type = "text/javascript";
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   return (
     <div id="Hero" className="mt-10 mb-10 px-4 sm:px-6 md:px-10 lg:px-30">
+      <style>{`@keyframes hero-shine { 0% { background-position: 100%; } 100% { background-position: -100%; } } @media (prefers-reduced-motion: reduce) { .hero-shine { animation: none !important; } }`}</style>
       <div className="flex flex-col lg:flex-row">
         {/* Empty div for spacing on larger screens */}
 
         <div className="w-full px-4 sm:px-10 md:px-16 lg:px-24 xl:px-40">
           <div id="intro" className="pb-4 lg:mb-36">
-            <div className="flex flex-col-reverse lg:flex-row items-center gap-8" style={{ fontFamily: 'Outfit' }}>
+            <div className="flex flex-col-reverse lg:flex-row items-center gap-8">
 
               {/* Text Section */}
               <div className="w-full lg:w-2/3 text-center lg:text-left">
 
                 {/* Name */}
-                <div className="text-[1.875rem] sm:text-[2.25rem] md:text-[3rem] lg:text-[5rem] font-bold">
+                <div className="text-[1.875rem] sm:text-[2.25rem] md:text-[3rem] lg:text-[5rem] font-semibold type-display">
                   <h1
                     className={`${isDarkMode ? "text-white" : "text-black"}`}
-                    style={{ display: "inline-block", fontFamily: "Raleway" }}
+                    style={{ display: "inline-block" }}
                   >
                     Pulkit Tiwari
                   </h1>
@@ -103,7 +90,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
                   viewport={{ once: true }}
                 >
                   {/* Title */}
-                  <div className="text-[1.25rem] sm:text-[1.5rem] md:text-[1.875rem] lg:text-[2.25rem] font-semibold mt-2">
+                  <div className="text-[1.25rem] sm:text-[1.5rem] md:text-[1.875rem] lg:text-[2.25rem] font-semibold type-headline mt-2">
                     <motion.span
                       variants={childVariants}
                       className={`bg-gradient-to-r ${isDarkMode
@@ -111,15 +98,15 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
                         : "from-black to-gray-700"
                         } bg-clip-text text-transparent`}
                     >
-                      <ShinyText text="Software Engineer" />
+                      <ShinyText text="Software Engineer" className={isDarkMode ? "text-[#b5b5b5a4]" : "text-gray-700"} />
                     </motion.span>
                   </div>
 
                   {/* Paragraph */}
-                  <div className="text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] font-light mt-3 px-2 sm:px-0">
+                  <div className="text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] font-normal leading-[1.47] mt-3 px-2 sm:px-0">
                     <motion.p
                       variants={childVariants}
-                      className={`${isDarkMode ? "text-stone-300" : "text-gray-700"} font-outfit`}
+                      className={isDarkMode ? "text-stone-300" : "text-gray-700"}
                     >
                       I’m a final-year <strong className={isDarkMode ? "text-blue-400" : "text-blue-700"}>Software Engineering</strong> student who likes building things
                       that are useful, scalable, and occasionally make me question why I
@@ -128,7 +115,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
                     <motion.p
                       variants={childVariants}
-                      className={`${isDarkMode ? "text-stone-300" : "text-gray-700"} mt-2 font-outfit`}
+                      className={`${isDarkMode ? "text-stone-300" : "text-gray-700"} mt-2`}
                     >
                       My work sits somewhere between{" "}
                       <strong className={isDarkMode ? "text-blue-400" : "text-blue-700"}>
@@ -140,7 +127,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
                     <motion.p
                       variants={childVariants}
-                      className={`${isDarkMode ? "text-stone-300" : "text-gray-700"} mt-2 font-outfit`}
+                      className={`${isDarkMode ? "text-stone-300" : "text-gray-700"} mt-2`}
                     >
                       I’m always learning, shipping, breaking things, fixing them, and
                       pretending the last bug was “expected behavior.” 🔗
@@ -163,25 +150,6 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
                     </motion.a>
                   </div>
 
-                  {/* LinkedIn Profile Badge */}
-                  <motion.div variants={childVariants} className="mt-6 flex justify-center lg:justify-start">
-                    <div
-                      className="badge-base LI-profile-badge"
-                      data-locale="en_US"
-                      data-size="large"
-                      data-theme={isDarkMode ? "dark" : "light"}
-                      data-type="HORIZONTAL"
-                      data-vanity="pulkittiwari51"
-                      data-version="v1"
-                    >
-                      <a
-                        className="badge-base__link LI-simple-link"
-                        href="https://in.linkedin.com/in/pulkittiwari51?trk=profile-badge"
-                      >
-                        Pulkit Tiwari
-                      </a>
-                    </div>
-                  </motion.div>
                 </motion.div>
               </div>
 
@@ -195,7 +163,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
                   handle="_pulkittiwari"
                   status="Available"
                   contactText="Let's Talk"
-                  onContactClick={() => console.log("Contact button clicked!")}
+                  onContactClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                 />
               </div>
             </div>

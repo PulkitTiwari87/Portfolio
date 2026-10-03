@@ -1,6 +1,6 @@
 import React from "react";
-import { IconType } from "react-icons";
-import { motion, Variants } from "framer-motion";
+import type { IconType } from "react-icons";
+import { motion, type Variants } from "framer-motion";
 import { FaJava } from "react-icons/fa";
 import {
     SiMongodb,
@@ -84,11 +84,11 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
             className="relative w-full min-h-screen px-4 sm:px-6 lg:px-12 text-center transition-all duration-500 flex flex-col justify-center items-center py-20"
         >
             {/* Section Heading */}
-            <motion.h1
+            <motion.h2
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: -100 }}
                 transition={{ duration: 1.5 }}
-                className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-20 tracking-tighter relative group inline-block transition-all ${
+                className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-semibold mb-20 type-display relative group inline-block transition-all ${
                     isDarkMode ? "text-white" : "text-black"
                 }`}
             >
@@ -98,7 +98,7 @@ const Technologies: React.FC<TechnologiesProps> = ({ isDarkMode }) => {
                         isDarkMode ? "bg-white" : "bg-black"
                     }`}
                 ></span>
-            </motion.h1>
+            </motion.h2>
 
             {/* Icon container wrapper */}
             <div

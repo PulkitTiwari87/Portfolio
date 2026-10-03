@@ -202,18 +202,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     >
       <div
         ref={cardRef}
-        className="relative w-[300px] h-[400px] rounded-[40px] overflow-hidden bg-black shadow-xl"
+        className="relative w-[min(300px,calc(100vw-4rem))] h-[400px] rounded-[40px] overflow-hidden bg-black shadow-xl"
         style={{
                 transform: `rotateX(var(--rotate-y)) rotateY(var(--rotate-x))`
             }}
       >
         {/* Avatar */}
-        <div className="absolute top-0 left-0 w-full h-full flex items-end justify-center">
+        <div className="absolute top-0 left-0 w-full h-full">
           <img
             src={avatarUrl}
-            alt="avatar"
-            className="w-full object-cover rounded-b-[30px] max-h-[400px]"
+            alt={name}
+            className="h-full w-full object-cover object-[50%_30%]"
           />
+          {/* Soft scrims keep the white name (top) and the contact bar (bottom) readable over any photo */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/55 via-transparent via-35% to-black/55" />
         </div>
 
         {/* User Info */}
@@ -222,6 +224,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="flex items-center gap-3">
               <img
                 src={miniAvatarUrl || avatarUrl}
+                alt=""
                 className="w-10 h-10 rounded-full border border-white/30 object-cover"
               />
               <div className="text-white text-sm">

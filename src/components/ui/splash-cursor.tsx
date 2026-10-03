@@ -1,3 +1,4 @@
+// @ts-nocheck -- vendored WebGL fluid effect; untyped upstream
 "use client";
 import { useEffect, useRef } from "react";
 

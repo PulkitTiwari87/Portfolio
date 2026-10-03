@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { experiences } from "../data/experience";
 
 interface ExperienceProps {
     isDarkMode: boolean;
 }
 
-interface ExperienceItem {
-    year: string;
-    role: string;
-    company: string;
-    description: string;
-    technologies: string[];
-}
+
 
 // Hook to detect when an element is in the viewport
 const useInView = (threshold = 0.2) => {
@@ -35,35 +30,18 @@ const useInView = (threshold = 0.2) => {
     return { ref, inView };
 };
 
+// One hook call per card (hooks can't be called inside experiences.map)
+const FadeInOnView: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const { ref, inView } = useInView();
+    return (
+        <div ref={ref} className={`transition-all duration-700 ${inView ? "animate-fade-in-up" : "opacity-0 translate-y-10"}`}>
+            {children}
+        </div>
+    );
+};
+
 const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
-    const experiences: ExperienceItem[] = [
-        {
-            year: "Jun 2026 – Present",
-            role: "Software Engineering Intern",
-            company: "Ascendion, Bengaluru",
-            description: `• Built a 3-agent CrewAI pipeline (AAVA platform) on AWS Bedrock using Claude models to automate resume reformatting: structured extraction -> formatted rendering -> Azure Blob Storage upload via SAS-token authentication.
-• Created an output validation agent using bias guardrails and knowledge-base-grounded scoring to automate compliance checks and generate branded reports across 10+ Generative AI applications.
-• Delivered 10+ Generative AI applications, automation tools, and agents using Python and LLM APIs, integrated through REST APIs and microservices.
-• Worked with software engineering and DevOps teams to deliver 7+ production features through CI/CD pipelines, improving deployment reliability and release efficiency.`,
-            technologies: ["Python", "CrewAI", "AWS Bedrock", "Claude LLM", "Azure Blob Storage", "REST APIs", "Microservices", "CI/CD"],
-        },
-        {
-            year: "Jun 2025 – Jul 2025",
-            role: "Full Stack Developer Intern",
-            company: "Weblicious, Dehradun",
-            description: `• Developed client-facing web applications using React.js, Node.js, and MongoDB (10+ Schema) with an API-first architecture.
-• Implemented REST APIs and backend workflows, improving data accessibility and reducing API response time by 25%.`,
-            technologies: ["React.js", "Node.js", "MongoDB", "REST APIs", "MERN Stack"],
-        },
-        {
-            year: "Sep 2024 – May 2026",
-            role: "Public Relations & Sponsorship Head",
-            company: "Cloud Security Alliance (UPES)",
-            description: `• Led a team of 30+ members organizing university-level technical events including hackathons, WebGenesis, and Funtopia 5.0, from concept through delivery.
-• Directed sponsorship outreach for AWS Community Day Dehradun 2025 (1,000+ attendees), securing industry collaboration including GitHub.`,
-            technologies: ["Leadership", "Public Relations", "Sponsorship", "Outreach", "Event Management"],
-        },
-    ];
+
 
     return (
         <div
@@ -83,7 +61,7 @@ const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
             </style>
 
             <h2
-                className={`text-4xl sm:text-5xl font-extrabold text-center mb-20 tracking-tighter ${isDarkMode ? "text-white" : "text-black"
+                className={`text-4xl sm:text-5xl font-semibold text-center mb-20 type-headline ${isDarkMode ? "text-white" : "text-black"
                     }`}
             >
                 Experience
@@ -91,20 +69,13 @@ const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
 
             <div className="flex flex-col space-y-16 w-full max-w-4xl">
                 {experiences.map((exp, index) => {
-                    const { ref, inView } = useInView();
-
                     return (
-                        <div
-                            key={index}
-                            ref={ref}
-                            className={`transition-all duration-700 ${inView ? "animate-fade-in-up" : "opacity-0 translate-y-10"
-                                }`}
-                        >
+                        <FadeInOnView key={index}>
                             <div className="flex flex-col lg:flex-row px-4 lg:px-0 gap-6">
                                 {/* Date Section */}
                                 <div className="w-full lg:w-1/4 text-center lg:text-left">
                                     <p
-                                        className={`text-sm font-mono uppercase tracking-widest ${isDarkMode ? "text-stone-500" : "text-gray-400"
+                                        className={`text-sm font-medium type-label tabular-nums ${isDarkMode ? "text-stone-400" : "text-gray-600"
                                             }`}
                                     >
                                         {exp.year}
@@ -135,7 +106,7 @@ const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
                                         {exp.technologies.map((tech, idx) => (
                                             <span
                                                 key={idx}
-                                                className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${isDarkMode
+                                                className={`rounded-full px-3 py-1 text-xs font-medium type-label ${isDarkMode
                                                         ? "bg-stone-900 text-stone-400 border border-stone-800"
                                                         : "bg-gray-100 text-gray-700 border border-gray-200"
                                                     }`}
@@ -146,7 +117,7 @@ const Experience: React.FC<ExperienceProps> = ({ isDarkMode }) => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </FadeInOnView>
                     );
                 })}
             </div>

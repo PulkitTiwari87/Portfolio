@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaLinkedinIn, FaGithub, FaTwitter, FaInstagram, FaEnvelope } from "react-icons/fa";
+import { FaLinkedinIn, FaGithub, FaInstagram } from "react-icons/fa";
 
 interface ContactProps {
     isDarkMode: boolean;
@@ -44,7 +44,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
     return (
         <section
             id="contact"
-            className={`w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-32 transition-colors duration-500
+            className={`w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-32 overflow-x-clip transition-colors duration-500
                 ${isDarkMode ? "bg-transparent text-white" : "bg-transparent text-black"}`}
         >
             <div className="container mx-auto max-w-6xl">
@@ -55,7 +55,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                     viewport={{ once: true }}
                     className="mb-20 text-center lg:text-left"
                 >
-                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-4">
+                    <h2 className="text-6xl md:text-8xl font-semibold type-display mb-4">
                         GET IN TOUCH
                     </h2>
                     <p className={`text-lg md:text-xl max-w-2xl ${isDarkMode ? "text-stone-400" : "text-gray-500"}`}>
@@ -73,7 +73,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                         className="space-y-12"
                     >
                         <div>
-                            <h3 className={`text-sm font-bold uppercase tracking-[0.2em] mb-6 ${isDarkMode ? "text-stone-500" : "text-gray-400"}`}>
+                            <h3 className={`text-sm font-semibold type-label mb-6 ${isDarkMode ? "text-stone-400" : "text-gray-600"}`}>
                                 Contact Details
                             </h3>
                             <a
@@ -85,7 +85,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                         </div>
 
                         <div>
-                            <h3 className={`text-sm font-bold uppercase tracking-[0.2em] mb-6 ${isDarkMode ? "text-stone-500" : "text-gray-400"}`}>
+                            <h3 className={`text-sm font-semibold type-label mb-6 ${isDarkMode ? "text-stone-400" : "text-gray-600"}`}>
                                 Socials
                             </h3>
                             <div className="flex flex-wrap gap-6">
@@ -102,7 +102,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                                         className={`text-2xl p-4 rounded-full border transition-all duration-300
                                             ${isDarkMode
                                                 ? "border-stone-800 text-stone-400 hover:text-white hover:bg-stone-900 hover:border-stone-700"
-                                                : "border-gray-200 text-gray-400 hover:text-black hover:bg-gray-100 hover:border-gray-300"}`}
+                                                : "border-gray-300 text-gray-600 hover:text-black hover:bg-gray-100 hover:border-gray-400"}`}
                                         aria-label={social.label}
                                     >
                                         {social.icon}
@@ -127,10 +127,12 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-widest opacity-50">Name</label>
+                                    <label htmlFor="contact-name" className="block text-xs font-medium type-label opacity-60">Name</label>
                                     <input
                                         type="text"
                                         name="name"
+                                        id="contact-name"
+                                        autoComplete="name"
                                         required
                                         placeholder="John Doe"
                                         className={`w-full px-6 py-4 rounded-xl border transition-all duration-300 outline-none
@@ -140,10 +142,12 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-widest opacity-50">Email</label>
+                                    <label htmlFor="contact-email" className="block text-xs font-medium type-label opacity-60">Email</label>
                                     <input
                                         type="email"
                                         name="email"
+                                        id="contact-email"
+                                        autoComplete="email"
                                         required
                                         placeholder="john@example.com"
                                         className={`w-full px-6 py-4 rounded-xl border transition-all duration-300 outline-none
@@ -155,10 +159,11 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest opacity-50">Subject</label>
+                                <label htmlFor="contact-subject" className="block text-xs font-medium type-label opacity-60">Subject</label>
                                 <input
                                     type="text"
                                     name="subject"
+                                    id="contact-subject"
                                     required
                                     placeholder="Project Inquiry"
                                     className={`w-full px-6 py-4 rounded-xl border transition-all duration-300 outline-none
@@ -169,9 +174,10 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest opacity-50">Message</label>
+                                <label htmlFor="contact-message" className="block text-xs font-medium type-label opacity-60">Message</label>
                                 <textarea
                                     name="message"
+                                    id="contact-message"
                                     required
                                     rows={5}
                                     placeholder="Tell me about your project..."
@@ -185,7 +191,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`w-full py-5 rounded-xl font-black uppercase tracking-tighter text-lg transition-all duration-300
+                                className={`w-full py-5 rounded-xl font-medium tracking-normal text-lg transition-all duration-300
                                     ${isDarkMode
                                         ? "bg-white text-black hover:bg-stone-200 disabled:bg-stone-500"
                                         : "bg-black text-white hover:bg-stone-800 disabled:bg-gray-400"}`}
@@ -195,9 +201,10 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
                             {result && (
                                 <motion.p
+                                    role="status"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className={`text-center font-bold tracking-tight ${result.includes("Successfully") ? "text-green-500" : "text-red-500"}`}
+                                    className={`text-center font-medium ${result.includes("Successfully") ? "text-green-500" : "text-red-500"}`}
                                 >
                                     {result}
                                 </motion.p>

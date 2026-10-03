@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
 import { Link } from "react-scroll"; // Import Link for smooth scrolling
 
@@ -13,6 +13,26 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
     const [isMobile, setIsMobile] = useState<boolean>(false); // Initialize to false, update in useEffect
     // State to control the visibility of the sidebar menu
     const [menuVisible, setMenuVisible] = useState<boolean>(true); // Initialize to true for desktop, false for mobile based on resize
+    // State + ref for the "Designs" dropdown
+    const [designsOpen, setDesignsOpen] = useState<boolean>(false);
+    const designsRef = useRef<HTMLDivElement | null>(null);
+
+    // Close the Designs dropdown on outside click or Escape
+    useEffect(() => {
+        if (!designsOpen) return;
+        const onDown = (e: MouseEvent) => {
+            if (designsRef.current && !designsRef.current.contains(e.target as Node)) setDesignsOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setDesignsOpen(false);
+        };
+        document.addEventListener("mousedown", onDown);
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("mousedown", onDown);
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [designsOpen]);
 
     // Effect hook to handle window resizing for responsive behavior
     useEffect(() => {
@@ -77,7 +97,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
 
                 {/* Navigation links */}
                 <nav className="flex flex-col gap-1 pl-12">
-                    {["Intro", "Technologies", "Projects", "GitHub", "Experience", "Contact"].map((item, index) => (
+                    {["Intro", "Technologies", "Projects", "GitHub", "Activity", "Experience", "Contact"].map((item, index) => (
                         <Link
                             key={index}
                             to={item === "Intro" ? "Hero" : item.toLowerCase().replace(/\s+/g, "-")} // "Intro" links to "Hero" section, others use their lowercased, hyphenated name
@@ -99,6 +119,82 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
                             }`}></span>
                         </Link>
                     ))}
+
+                    {/* Designs dropdown */}
+                    <div className="relative" ref={designsRef}>
+                        <button
+                            onClick={() => setDesignsOpen((o) => !o)}
+                            aria-haspopup="menu"
+                            aria-expanded={designsOpen}
+                            className={`flex items-center gap-1 text-sm opacity-70 transition-all duration-300 ease-in-out cursor-pointer ${
+                                isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black"
+                            }`}
+                        >
+                            Designs
+                            <span className={`text-[9px] transition-transform duration-200 ${designsOpen ? "rotate-180" : ""}`}>▼</span>
+                        </button>
+                        {designsOpen && (
+                            <div
+                                role="menu"
+                                className={`absolute left-full top-1/2 ml-4 min-w-[8rem] -translate-y-1/2 rounded-xl border p-1 backdrop-blur-xl ${
+                                    isDarkMode ? "border-white/10 bg-black/70" : "border-black/10 bg-white/80"
+                                }`}
+                            >
+                                <button
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setDesignsOpen(false);
+                                        if (isMobile) setMenuVisible(false);
+                                        window.location.hash = "#/designs/apple";
+                                    }}
+                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
+                                    }`}
+                                >
+                                    Apple
+                                </button>
+                                <button
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setDesignsOpen(false);
+                                        if (isMobile) setMenuVisible(false);
+                                        window.location.hash = "#/designs/frame";
+                                    }}
+                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
+                                    }`}
+                                >
+                                    Frame
+                                </button>
+                                <button
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setDesignsOpen(false);
+                                        if (isMobile) setMenuVisible(false);
+                                        window.location.hash = "#/designs/nerd";
+                                    }}
+                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
+                                    }`}
+                                >
+                                    NERD
+                                </button>
+                                <button
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setDesignsOpen(false);
+                                        if (isMobile) setMenuVisible(false);
+                                        window.location.hash = "#/designs/blahhh";
+                                    }}
+                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
+                                    }`}
+                                >
+                                    Blahhh
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </nav>
 
                 {/* Theme toggle button */}
