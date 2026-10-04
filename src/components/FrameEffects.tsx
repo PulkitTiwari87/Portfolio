@@ -34,7 +34,9 @@ import {
     LuZap,
 } from "react-icons/lu";
 import { experiences } from "../data/experience";
-import { REPO_META, isFlagship, projectUrl } from "../data/repos";
+import { REPO_META, projectUrl } from "../data/repos";
+import { videoFor, type ProjectVideoMeta } from "../data/videos";
+import ProjectVideo from "./ui/ProjectVideo";
 import type { Repo } from "../types";
 
 // Scroll / hover effects for the bottom half of the "Frame" design. The motion
@@ -280,22 +282,22 @@ const MagneticChip: React.FC<{ text: string; index: number }> = ({ text, index }
 };
 
 const FeatureText: React.FC<{ feature: Feature }> = ({ feature }) => (
-    <div className="group relative flex h-full w-full items-center overflow-hidden p-5 md:p-12 lg:p-16">
+    <div className="group relative flex h-full w-full items-center overflow-hidden p-5 md:p-8 2xl:p-16">
         <div
             className="absolute inset-0 origin-top scale-y-0 bg-[var(--f-accent)] opacity-[0.1] transition-transform duration-[400ms] group-hover:scale-y-100"
             aria-hidden="true"
         />
-        <div className="relative z-10 flex w-full max-w-2xl flex-col items-start gap-4 md:gap-9">
+        <div className="relative z-10 flex w-full max-w-2xl flex-col items-start gap-4 md:gap-6 2xl:gap-9">
             <div className="flex items-center gap-4">
                 <span className={`${mono} text-[10px] font-black text-[color:var(--f-accent)] md:text-[11px]`}>FEATURE — {feature.n}</span>
                 <span className="h-px w-12 bg-[color:var(--f-accent)] opacity-40" aria-hidden="true" />
             </div>
             <h3
-                className={`${display} origin-left cursor-default text-3xl leading-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-6 hover:text-[color:var(--f-muted)] md:text-6xl lg:text-7xl`}
+                className={`${display} origin-left cursor-default text-3xl leading-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-6 hover:text-[color:var(--f-muted)] md:text-5xl xl:text-6xl 2xl:text-7xl`}
             >
                 {feature.title}
             </h3>
-            <p className={`max-w-lg text-[13px] leading-snug md:text-xl ${muted}`}>{feature.body}</p>
+            <p className={`max-w-lg text-[13px] leading-snug md:text-lg 2xl:text-xl ${muted}`}>{feature.body}</p>
             <div className="flex flex-wrap gap-2 pt-1 md:gap-4 md:pt-4">
                 {feature.tags.map((t, i) => (
                     <MagneticChip key={t} text={t} index={i} />
@@ -479,6 +481,7 @@ interface ProjectItem {
     url: string;
     live: boolean;
     stars: number;
+    video?: ProjectVideoMeta;
 }
 
 const toItem = (repo: Repo): ProjectItem => {
@@ -492,6 +495,7 @@ const toItem = (repo: Repo): ProjectItem => {
         url: projectUrl(repo),
         live: !!repo.homepage?.trim(),
         stars: repo.stargazers_count,
+        video: videoFor(repo.name),
     };
 };
 
@@ -585,10 +589,12 @@ const ProjectSlider: React.FC<{ items: ProjectItem[]; github: string; onViewAll:
                                 <motion.div style={{ y: barY }} className="relative h-full w-full" aria-hidden="true">
                                     {items.map((it, i) => (
                                         <div key={it.key} className="absolute flex h-full w-full items-center justify-center py-3" style={{ top: i * STEP }}>
-                                            <div className="flex h-full w-full flex-col justify-between rounded-sm bg-[var(--f-btn-fg)] p-4 text-[color:var(--f-btn-bg)]">
-                                                <span className={`${mono} text-[10px] font-bold`}>{it.category}</span>
-                                                <span className={`${display} text-7xl leading-none`}>{String(i + 1).padStart(2, "0")}</span>
-                                            </div>
+                                            {!it.video && (
+                                                <div className="flex h-full w-full flex-col justify-between rounded-sm bg-[var(--f-btn-fg)] p-4 text-[color:var(--f-btn-bg)]">
+                                                    <span className={`${mono} text-[10px] font-bold`}>{it.category}</span>
+                                                    <span className={`${display} text-7xl leading-none`}>{String(i + 1).padStart(2, "0")}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </motion.div>
@@ -602,6 +608,11 @@ const ProjectSlider: React.FC<{ items: ProjectItem[]; github: string; onViewAll:
                                             className="absolute flex h-full w-full flex-col justify-between px-[3.5%] py-8 uppercase"
                                             style={{ top: i * STEP }}
                                         >
+                                            {it.video && (
+                                                <div className="pointer-events-auto absolute left-1/2 top-0 hidden h-full w-[min(440px,36%)] -translate-x-1/2 py-3 md:block">
+                                                    <ProjectVideo video={it.video} active={i === page} className="h-full w-full" />
+                                                </div>
+                                            )}
                                             <div className="flex items-start justify-between gap-4">
                                                 <p className="text-[10px] font-extrabold tracking-[0.2em]">{String(i + 1).padStart(2, "0")}</p>
                                                 <h4 className="max-w-[60%] text-right text-lg font-medium leading-tight tracking-tight md:max-w-[30%] md:text-2xl">{it.title}</h4>
@@ -822,7 +833,7 @@ export const ProjectsSection: React.FC<{ repos: Repo[]; status: "loading" | "rea
     github,
 }) => {
     const reduce = !!useReducedMotion();
-    const featured = [...repos].sort((a, b) => Number(isFlagship(b)) - Number(isFlagship(a))).slice(0, 5).map(toItem);
+    const featured = repos.slice(0, 5).map(toItem);
     const viewAll = () => document.getElementById("all-projects")?.scrollIntoView({ behavior: "smooth", block: "start" });
     return (
         <section id="work" className="scroll-mt-14">
@@ -877,10 +888,11 @@ export const JourneyTimeline: React.FC<{ email: string; emailAddress: string }> 
         for (let i = 0; i < count; i++) {
             const el = itemRefs.current[i];
             if (!el) continue;
-            const r = el.getBoundingClientRect();
+            // offsetLeft + the current track x (not getBoundingClientRect, which lags the transform by a frame)
+            const left = el.offsetLeft + x.get();
             const next = itemRefs.current[i + 1];
-            const end = next ? next.getBoundingClientRect().left : r.left + r.width;
-            if (marker >= r.left && marker < end) {
+            const end = next ? next.offsetLeft + x.get() : left + el.offsetWidth;
+            if (marker >= left && marker < end) {
                 found = i;
                 break;
             }
@@ -1275,7 +1287,7 @@ export const ContactSection: React.FC<ContactProps> = ({ email, emailAddress, re
                     <MagneticButton href={resume} label="View résumé" external />
                 </div>
 
-                <div className={`mt-20 flex flex-col gap-4 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between ${line} ${muted}`}>
+                <div className={`mt-20 flex flex-col gap-4 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between md:pr-20 ${line} ${muted}`}>
                     <p>© {new Date().getFullYear()} Pulkit Tiwari · Dehradun, India</p>
                     <ul className="flex flex-wrap gap-x-5 gap-y-2">
                         {socials.map((s) => (

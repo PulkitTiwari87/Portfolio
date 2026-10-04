@@ -21,6 +21,8 @@ import {
 import { SiLeetcode } from "react-icons/si";
 import { experiences } from "../data/experience";
 import { LANG_COLORS, REPO_META, isFlagship, projectUrl } from "../data/repos";
+import { videoFor } from "../data/videos";
+import ProjectVideo from "./ui/ProjectVideo";
 import { fetchAllRepos } from "../utils/github";
 import { GITHUB_PROFILE_URL, loadGitHubYear, loadLeetCodeActivity } from "../utils/activity";
 import type { LeetCodeActivity, YearContribution } from "../utils/activity";
@@ -213,7 +215,7 @@ const FILES = [
             '  name: "Pulkit Tiwari",',
             '  role: "Software Developer",',
             '  location: "Dehradun, IN",',
-            '  education: "B.Tech CSE @ UPES · CGPA 7.43",',
+            '  education: "B.Tech CSE @ UPES",',
             '  stack: ["Python", "TypeScript", "React", "Node.js", "AWS"],',
             '  status: "open to opportunities",',
             "};",
@@ -394,7 +396,7 @@ const CodeWindow: React.FC = () => {
             const start = offset;
             offset += tok.t.length;
             const shown = Math.max(0, Math.min(tok.t.length, count - start));
-            const hereCursor = !cursorPlaced && start + tok.t.length >= count;
+            const hereCursor = !cursorPlaced && start + tok.t.length >= Math.min(count, file.total - 1); // caret rests on the last token once done
             if (hereCursor) cursorPlaced = true;
             return (
                 <span key={ti} className={TOK_COLOR[tok.c]}>
@@ -529,7 +531,7 @@ const YearHeatmap: React.FC<{ days: YearContribution[]; onTip: (t: Tip | null) =
             style={gridStyle(weeks)}
         >
             {[1, 3, 5].map((w) => (
-                <span key={w} className={`${mono} flex items-center text-[9px] leading-none text-[color:var(--n-muted)]`} style={{ gridColumn: 1, gridRow: w + 2 }}>
+                <span key={w} className={`${mono} sticky left-0 z-[1] flex items-center bg-[var(--n-surface)] text-[9px] leading-none text-[color:var(--n-muted)]`} style={{ gridColumn: 1, gridRow: w + 2 }}>
                     {["", "Mon", "", "Wed", "", "Fri", ""][w]}
                 </span>
             ))}
@@ -1189,6 +1191,7 @@ const NerdDesign: React.FC<NerdDesignProps> = ({ isDarkMode, toggleTheme, onExit
                                             const title = meta?.displayName ?? repo.name.replace(/[_-]/g, " ");
                                             const desc = meta?.description ?? repo.description ?? "A project by Pulkit Tiwari.";
                                             const live = !!repo.homepage?.trim();
+                                            const video = videoFor(repo.name);
                                             const folder = isFlagship(repo);
                                             const Icon = folder ? FaFolder : FaRegFileCode;
                                             const lang = repo.language ? (LANG_COLORS[repo.language] ?? "var(--n-muted)") : "var(--n-muted)";
@@ -1231,6 +1234,7 @@ const NerdDesign: React.FC<NerdDesignProps> = ({ isDarkMode, toggleTheme, onExit
                                                             )}
                                                         </div>
                                                         <p className="mt-1 ml-1 line-clamp-2 font-sans text-sm text-[color:var(--n-muted)] sm:ml-9">— {desc}</p>
+                                                        {video && <ProjectVideo video={video} compact className="relative z-10 mt-2 ml-1 text-[color:var(--n-cyan)] sm:ml-9" />}
                                                     </div>
                                                     <span className="relative z-10 flex shrink-0 items-center gap-3 pl-9 text-[11px] sm:pl-0">
                                                         {live && (

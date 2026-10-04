@@ -16,6 +16,8 @@ import { REPO_META, isFlagship, projectUrl } from "../data/repos";
 import { fetchAllRepos } from "../utils/github";
 import Activity from "./Activity";
 import AppleHello from "./ui/AppleHello";
+import DesignMenu from "./ui/DesignMenu";
+import { DESIGNS, goToDesign } from "../data/designs";
 import type { Repo } from "../types";
 import profileImg from "../assets/profile-portrait.jpg";
 
@@ -25,7 +27,6 @@ import profileImg from "../assets/profile-portrait.jpg";
 interface AppleDesignProps {
     isDarkMode: boolean;
     toggleTheme: () => void;
-    onExit: () => void;
 }
 
 const RESUME_PDF = "/Pulkit_Tiwari_SDE.pdf";
@@ -155,13 +156,42 @@ const Hairline: React.FC = () => {
     );
 };
 
+// Scroll-linked parallax (transform/opacity only, motion values only, light spring smoothing). Static under reduced motion.
+const SMOOTH = { stiffness: 140, damping: 30, mass: 0.4 };
+const STOPS = [0, 0.3, 0.7, 1];
+// Wraps content and moves it against the page scroll. p = 0 when the wrapper enters the bottom of the viewport, 1 when it
+// leaves the top. y: [at enter, at leave] px (positive-to-negative = faster than scroll, negative-to-positive = slower).
+// scale / fade: values at STOPS (enter, settled-in, settled-out, leave) for the Apple scale-in / ease-out feel.
+const Drift: React.FC<{
+    children: React.ReactNode;
+    className?: string;
+    y?: [number, number];
+    scale?: number[];
+    fade?: number[];
+}> = ({ children, className, y = [0, 0], scale = [1, 1, 1, 1], fade = [1, 1, 1, 1] }) => {
+    const reduce = useReducedMotion();
+    const ref = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+    const p = useSpring(scrollYProgress, SMOOTH);
+    const ty = useTransform(p, [0, 1], y);
+    const ts = useTransform(p, STOPS, scale);
+    const to = useTransform(p, STOPS, fade);
+    return (
+        <motion.div ref={ref} className={className} style={reduce ? undefined : { y: ty, scale: ts, opacity: to, willChange: "transform" }}>
+            {children}
+        </motion.div>
+    );
+};
+
 // Portrait card: scroll-linked parallax/scale + pointer tilt (max 3deg, spring, resets on leave) + soft pulsing dot.
 const TILT = { stiffness: 250, damping: 32, mass: 1 };
 const Portrait: React.FC<{ ready: boolean }> = ({ ready }) => {
     const reduce = useReducedMotion();
     const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 600], [0, reduce ? 0 : 40]);
-    const scale = useTransform(scrollY, [0, 600], [1, reduce ? 1 : 0.96]);
+    // Falls behind the page (slower than scroll) while growing and tilting slightly: depth against the headline.
+    const y = useSpring(useTransform(scrollY, [0, 700], [0, 64]), SMOOTH);
+    const scale = useSpring(useTransform(scrollY, [0, 700], [1, 1.05]), SMOOTH);
+    const rotate = useSpring(useTransform(scrollY, [0, 700], [0, 1.5]), SMOOTH);
     const rx = useSpring(0, TILT);
     const ry = useSpring(0, TILT);
     const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -181,7 +211,11 @@ const Portrait: React.FC<{ ready: boolean }> = ({ ready }) => {
             transition={{ duration: 0.9, ease: EASE, delay: 0.25 }}
             className="w-full max-w-[340px]"
         >
-            <motion.div style={{ y, scale, perspective: 900 }} onPointerMove={onMove} onPointerLeave={reset}>
+            <motion.div
+                style={reduce ? { perspective: 900 } : { y, scale, rotate, perspective: 900, willChange: "transform" }}
+                onPointerMove={onMove}
+                onPointerLeave={reset}
+            >
                 <motion.figure
                     style={{ rotateX: rx, rotateY: ry }}
                     className="relative aspect-[4/5] w-full overflow-hidden rounded-[24px] border border-black/[0.08] bg-[#f5f5f7] dark:border-white/[0.1] dark:bg-[#1d1d1f]"
@@ -215,14 +249,18 @@ const Eyebrow: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 
 const SectionTitle: React.FC<{ eyebrow: string; title: string }> = ({ eyebrow, title }) => (
     <Reveal className="mb-14">
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h2 className="mt-1 text-3xl font-semibold tracking-[-0.022em] leading-[1.1] text-[#1d1d1f] md:text-5xl dark:text-[#f5f5f7]">
-            {title}
-        </h2>
+        <Drift y={[-10, 10]}>
+            <Eyebrow>{eyebrow}</Eyebrow>
+        </Drift>
+        <Drift y={[-24, 24]}>
+            <h2 className="mt-1 text-3xl font-semibold tracking-[-0.022em] leading-[1.1] text-[#1d1d1f] md:text-5xl dark:text-[#f5f5f7]">
+                {title}
+            </h2>
+        </Drift>
     </Reveal>
 );
 
-const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onExit }) => {
+const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme }) => {
     const [role, setRole] = useState<keyof Content>("anyone");
     const [scrolled, setScrolled] = useState(false);
     const [active, setActive] = useState("overview");
@@ -234,6 +272,16 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
     const [filter, setFilter] = useState("All");
     const [showAll, setShowAll] = useState(false);
     const [showHello, setShowHello] = useState(true);
+
+    // Hero depth: p runs 0 -> 1 while the first screen scrolls away. Each layer moves at its own rate.
+    const heroRef = useRef<HTMLElement>(null);
+    const { scrollYProgress: heroRaw } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+    const hp = useSpring(heroRaw, SMOOTH);
+    const headY = useTransform(hp, [0, 1], [0, -60]);
+    const headOpacity = useTransform(hp, [0, 0.8], [1, 0.2]);
+    const headScale = useTransform(hp, [0, 1], [1, 0.96]);
+    const eyebrowY = useTransform(hp, [0, 1], [0, -40]);
+    const ctaY = useTransform(hp, [0, 1], [0, 30]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -247,7 +295,11 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
 
     // Nav bar gains blur/saturation + hairline after ~8px of scroll.
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 8);
+        const onScroll = () => {
+            setScrolled(window.scrollY > 8);
+            // The last section can't reach the observer band at page bottom; pin it active there.
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) setActive("contact");
+        };
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
@@ -259,7 +311,10 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
         const io = new IntersectionObserver(
             (entries) => {
                 if (performance.now() < lockUntil.current) return;
-                const hit = entries.find((e) => e.isIntersecting);
+                // Batched entries can hold stale enter/leave pairs for one section; keep only the latest per target.
+                const latest = new Map<Element, IntersectionObserverEntry>();
+                entries.forEach((e) => latest.set(e.target, e));
+                const hit = [...latest.values()].find((e) => e.isIntersecting);
                 if (hit) setActive(hit.target.id);
             },
             { rootMargin: "-40% 0px -55% 0px" },
@@ -326,7 +381,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                     <motion.button
                         onClick={() => goTo("overview")}
                         {...PRESS}
-                        className="flex items-center gap-2 text-sm font-semibold tracking-[-0.01em]"
+                        className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-semibold tracking-[-0.01em]"
                     >
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1d1d1f] text-[11px] font-medium text-white dark:bg-[#f5f5f7] dark:text-black">
                             P
@@ -334,7 +389,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                         <span>Pulkit Tiwari</span>
                     </motion.button>
 
-                    <nav className="hidden items-center gap-7 md:flex">
+                    <nav className="hidden items-center gap-7 lg:flex">
                         {NAV.map((n) => (
                             <motion.button
                                 key={n.id}
@@ -355,7 +410,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                         ))}
                     </nav>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex shrink-0 items-center gap-4">
                         <motion.a href={RESUME_PDF} target="_blank" rel="noreferrer" {...PRESS} className={`text-xs tracking-[0.01em] ${linkBlue}`}>
                             Resume
                         </motion.a>
@@ -363,18 +418,16 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                             onClick={toggleTheme}
                             {...PRESS}
                             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-                            className="text-sm text-[#6e6e73] transition-colors hover:text-[#1d1d1f] dark:text-[#86868b] dark:hover:text-white"
+                            className="-m-2.5 p-2.5 text-sm text-[#6e6e73] transition-colors hover:text-[#1d1d1f] dark:text-[#86868b] dark:hover:text-white"
                         >
                             {isDarkMode ? <FaSun /> : <FaMoon />}
                         </motion.button>
-                        <motion.button onClick={onExit} {...PRESS} className={`hidden sm:block ${navLink}`}>
-                            ‹ Portfolio
-                        </motion.button>
+                        <DesignMenu className="hidden sm:block" />
                         <button
                             onClick={() => setMenuOpen((o) => !o)}
                             aria-label="Menu"
                             aria-expanded={menuOpen}
-                            className="flex h-6 w-6 flex-col items-center justify-center gap-[5px] md:hidden"
+                            className="-m-1.5 flex h-9 w-9 flex-col items-center justify-center gap-[5px] lg:hidden"
                         >
                             <span className={`block h-px w-4 bg-current transition-transform duration-200 ${menuOpen ? "translate-y-[3px] rotate-45" : ""}`} />
                             <span className={`block h-px w-4 bg-current transition-transform duration-200 ${menuOpen ? "-translate-y-[3px] -rotate-45" : ""}`} />
@@ -382,31 +435,49 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                     </div>
                 </div>
                 {menuOpen && (
-                    <nav className="border-t border-black/[0.08] px-6 py-4 md:hidden dark:border-white/[0.08]">
-                        {[...NAV, { id: "", label: "‹ Back to portfolio" }].map((n) => (
+                    <nav className="border-t border-black/[0.08] px-6 py-4 lg:hidden dark:border-white/[0.08]">
+                        {NAV.map((n) => (
                             <button
-                                key={n.label}
-                                onClick={() => (n.id ? goTo(n.id) : onExit())}
+                                key={n.id}
+                                onClick={() => goTo(n.id)}
                                 className="block w-full py-2.5 text-left text-lg font-semibold tracking-[-0.015em]"
                             >
                                 {n.label}
                             </button>
                         ))}
+                        <div className="border-t border-black/[0.08] py-2 dark:border-white/[0.08]">
+                            <p className="px-0 py-2 text-xs font-medium tracking-[0.02em] text-[#86868b]">Designs</p>
+                            {DESIGNS.map((d) => (
+                                <button
+                                    key={d.id}
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        goToDesign(d.hash);
+                                    }}
+                                    className="block w-full py-2 text-left text-base tracking-[-0.01em]"
+                                >
+                                    {d.note === "Home" ? `${d.label} (Home)` : d.label}
+                                </button>
+                            ))}
+                        </div>
                     </nav>
                 )}
             </header>
 
             <main>
                 {/* Hero + profile: one composition (Stitch "Hero & Profile Redesign") */}
-                <section id="overview" className="mx-auto max-w-[980px] scroll-mt-12 px-6 pt-28 pb-14 md:pt-36 md:pb-16">
-                    <div className="grid grid-cols-12 items-start gap-8 lg:gap-12">
+                <section ref={heroRef} id="overview" className="mx-auto max-w-[980px] scroll-mt-12 px-6 pt-28 pb-14 md:pt-36 md:pb-16">
+                    <div className="grid grid-cols-12 items-start gap-y-8 md:gap-8 lg:gap-12">
                         <motion.div
                             variants={heroParent}
                             initial="hidden"
                             animate={showHello ? "hidden" : "show"}
+                            style={reduce ? undefined : { y: headY, opacity: headOpacity, scale: headScale, willChange: "transform" }}
                             className="col-span-12 flex flex-col justify-center lg:col-span-7"
                         >
-                            <motion.p variants={heroItem} className="mb-3.5 text-[13px] text-[#6e6e73] dark:text-[#86868b]">Final-year Software Engineering student</motion.p>
+                            <motion.div style={reduce ? undefined : { y: eyebrowY }}>
+                                <motion.p variants={heroItem} className="mb-3.5 text-[13px] text-[#6e6e73] dark:text-[#86868b]">Final-year Software Engineering student</motion.p>
+                            </motion.div>
                             <motion.h1 variants={heroItem} className="mb-4 text-[56px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[72px] lg:text-[88px]">
                                 Pulkit Tiwari.
                             </motion.h1>
@@ -417,6 +488,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                 I like building things that are useful, scalable, and occasionally make me question why I started debugging at 2 AM.
                                 My work sits between software development, AI, and cybersecurity.
                             </motion.p>
+                            <motion.div style={reduce ? undefined : { y: ctaY }}>
                             <motion.div variants={heroItem} className="flex flex-wrap items-center gap-6">
                                 <motion.button
                                     onClick={() => goTo("contact")}
@@ -431,6 +503,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                     View projects <span className="ml-1 transition-transform duration-300 ease-out group-hover:translate-x-[3px]">›</span>
                                 </motion.button>
                             </motion.div>
+                            </motion.div>
                         </motion.div>
 
                         <div className="col-span-12 flex justify-center self-start lg:col-span-5 lg:justify-end">
@@ -441,11 +514,11 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
 
                 {/* Facts strip */}
                 <section id="profile" className="scroll-mt-12 border-y border-black/[0.08] bg-[#fbfbfd] dark:border-white/[0.08] dark:bg-[#0a0a0b]">
-                    <div className="mx-auto max-w-[980px] px-6 py-6">
+                    <Drift className="mx-auto max-w-[980px] px-6 py-6" scale={[0.95, 1, 1, 0.98]} fade={[0.5, 1, 1, 0.7]}>
                         <dl className="grid grid-cols-1 gap-6 divide-y divide-black/[0.08] md:grid-cols-3 md:divide-x md:divide-y-0 dark:divide-white/[0.1]">
                             {[
                                 ["Location", "Dehradun, India"],
-                                ["Education", "B.Tech CSE, UPES · 2027 · CGPA 7.43"],
+                                ["Education", "B.Tech CSE, UPES · 2027"],
                                 ["Focus", "Generative AI, agents and security automation"],
                             ].map(([k, v], i) => (
                                 <Reveal key={k} i={i} className={`${i > 0 ? "pt-4 md:pt-0" : ""} ${i === 0 ? "md:pr-6" : i === 1 ? "md:px-6" : "md:pl-6"}`}>
@@ -454,7 +527,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                 </Reveal>
                             ))}
                         </dl>
-                    </div>
+                    </Drift>
                 </section>
 
                 <Reveal className="mx-auto flex max-w-[980px] flex-wrap items-center justify-center gap-x-8 gap-y-2 px-6 py-6 text-[14px]">
@@ -466,7 +539,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
 
                 {/* Role switcher */}
                 <section className="border-y border-black/[0.06] bg-[#f5f5f7] py-20 md:py-24 dark:border-white/[0.08] dark:bg-[#161617]">
-                    <div className="mx-auto max-w-[980px] px-6">
+                    <Drift className="mx-auto max-w-[980px] px-6" y={[30, -30]} scale={[0.94, 1, 1, 0.97]} fade={[0.2, 1, 1, 0.5]}>
                         <Reveal className="-mx-6 flex overflow-x-auto px-6 pb-2 no-scrollbar md:mx-0 md:justify-center md:px-0 md:pb-0">
                             <div role="tablist" aria-label="Perspective" className="inline-flex gap-1 rounded-full border border-black/[0.04] bg-black/[0.04] p-1 dark:border-white/[0.06] dark:bg-white/[0.06]">
                                 {(Object.keys(content) as (keyof Content)[]).map((r) => (
@@ -518,7 +591,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                 </span>
                             ))}
                         </Reveal>
-                    </div>
+                    </Drift>
                 </section>
 
                 {/* Projects: numbered rows, hairline dividers */}
@@ -586,7 +659,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                     transition={SPRING}
                                     className="group grid grid-cols-[2.5rem_1fr] gap-x-4 gap-y-3 border-b border-black/[0.08] py-8 transition-colors duration-300 ease-out hover:bg-black/[0.02] md:grid-cols-[3rem_1fr_auto] md:items-center dark:border-white/[0.08] dark:hover:bg-white/[0.03]"
                                 >
-                                    <span className="pt-2 text-sm tabular-nums text-[#86868b] md:pt-0">{String(i + 1).padStart(2, "0")}</span>
+                                    <Drift y={[-10, 10]} className="pt-2 text-sm tabular-nums text-[#86868b] md:pt-0">{String(i + 1).padStart(2, "0")}</Drift>
                                     <div className="min-w-0">
                                         <h3 className="truncate text-2xl font-semibold leading-[1.125] tracking-[-0.015em] md:text-[32px]">{title}</h3>
                                         <p className="mt-2 line-clamp-2 text-[17px] leading-[1.47] text-[#6e6e73] dark:text-[#a1a1a6]">{desc}</p>
@@ -612,9 +685,11 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
 
                 {/* Activity: last 30 days of GitHub contributions + LeetCode submissions */}
                 <section id="activity" className="mx-auto max-w-[980px] scroll-mt-12 px-6 pb-24 md:pb-32">
-                    <Reveal blur={false}>
-                        <Activity variant="apple" />
-                    </Reveal>
+                    <Drift y={[24, -24]} scale={[0.96, 1, 1, 0.98]}>
+                        <Reveal blur={false}>
+                            <Activity variant="apple" />
+                        </Reveal>
+                    </Drift>
                 </section>
 
                 {/* Stack */}
@@ -623,7 +698,8 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                         <SectionTitle eyebrow="Technical competency" title="Stack & tooling." />
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
                             {STACK.map((g, gi) => (
-                                <Reveal key={g.title} i={gi} className="rounded-[18px] border border-black/[0.05] bg-white p-7 dark:border-white/[0.08] dark:bg-[#1d1d1f]">
+                                <Drift key={g.title} y={gi === 1 ? [-16, 16] : [14, -14]}>
+                                <Reveal i={gi} className="h-full rounded-[18px] border border-black/[0.05] bg-white p-7 dark:border-white/[0.08] dark:bg-[#1d1d1f]">
                                     <h3 className="border-b border-black/[0.06] pb-3 text-sm font-semibold tracking-tight dark:border-white/[0.08]">{g.title}</h3>
                                     <motion.ul
                                         variants={listV}
@@ -640,6 +716,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                         ))}
                                     </motion.ul>
                                 </Reveal>
+                                </Drift>
                             ))}
                         </div>
                         <Reveal className="mt-6 rounded-[18px] border border-black/[0.05] bg-white p-7 md:mt-8 dark:border-white/[0.08] dark:bg-[#1d1d1f]">
@@ -673,8 +750,8 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                         {experiences.map((exp, ei) => (
                             <Reveal key={exp.role + exp.year} className="relative grid grid-cols-1 gap-4 py-8 md:grid-cols-12">
                                 {ei > 0 && <Hairline />}
-                                <div className="pt-1 text-xs tracking-wide text-[#86868b] md:col-span-3">{exp.year}</div>
-                                <div className="md:col-span-9">
+                                <Drift y={[-12, 12]} className="pt-1 text-xs tracking-wide text-[#86868b] md:col-span-3">{exp.year}</Drift>
+                                <Drift y={[6, -6]} className="md:col-span-9">
                                     <h3 className="text-lg font-semibold tracking-[-0.01em] md:text-[21px]">{exp.role}</h3>
                                     <p className="mt-0.5 text-xs text-[#86868b]">{exp.company}</p>
                                     <ul className="mt-3 space-y-2 text-[15px] leading-[1.47] text-[#515154] dark:text-[#a1a1a6]">
@@ -696,7 +773,7 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                             </span>
                                         ))}
                                     </div>
-                                </div>
+                                </Drift>
                             </Reveal>
                         ))}
                     </div>
@@ -706,12 +783,16 @@ const AppleDesign: React.FC<AppleDesignProps> = ({ isDarkMode, toggleTheme, onEx
                 <section id="contact" className="scroll-mt-12 border-t border-black/[0.06] bg-[#f5f5f7] py-24 dark:border-white/[0.08] dark:bg-[#161617]">
                     <div className="mx-auto max-w-[980px] px-6 text-center">
                         <Reveal>
-                            <h2 className="text-4xl font-semibold leading-[1.07] tracking-[-0.025em] md:text-5xl">Let's connect.</h2>
+                            <Drift y={[-24, 24]}>
+                                <h2 className="text-4xl font-semibold leading-[1.07] tracking-[-0.025em] md:text-5xl">Let's connect.</h2>
+                            </Drift>
                         </Reveal>
                         <Reveal i={1}>
-                            <p className="mx-auto mt-4 max-w-xl text-base leading-[1.47] text-[#6e6e73] md:text-lg dark:text-[#a1a1a6]">
-                                Looking for software engineering opportunities where I can build real products and keep getting better at the fundamentals.
-                            </p>
+                            <Drift y={[-10, 10]}>
+                                <p className="mx-auto mt-4 max-w-xl text-base leading-[1.47] text-[#6e6e73] md:text-lg dark:text-[#a1a1a6]">
+                                    Looking for software engineering opportunities where I can build real products and keep getting better at the fundamentals.
+                                </p>
+                            </Drift>
                         </Reveal>
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                             {[0, 1].map((n) => (

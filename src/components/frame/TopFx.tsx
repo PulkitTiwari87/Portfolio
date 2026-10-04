@@ -232,7 +232,7 @@ export const AvailableTab: React.FC<{
             <button
                 type="button"
                 aria-expanded={open}
-                className="rounded-r-3xl bg-[var(--f-fg)] px-2.5 py-8 text-[9px] font-black uppercase tracking-[0.5em] text-[color:var(--f-bg)] shadow-2xl transition-transform duration-300 hover:translate-x-2.5 focus-visible:translate-x-2.5 [writing-mode:vertical-rl]"
+                className="rounded-r-3xl bg-[var(--f-fg)] px-8 py-2.5 text-[9px] font-black uppercase tracking-[0.5em] text-[color:var(--f-bg)] shadow-2xl transition-transform duration-300 hover:translate-x-2.5 focus-visible:translate-x-2.5 [writing-mode:vertical-rl]"
             >
                 Available for opportunity
             </button>
@@ -412,7 +412,7 @@ export const AboutPanel: React.FC<{
     const scaleRef = useRef<HTMLDivElement>(null);
     const parRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
-    const [revealed, setRevealed] = useState(false);
+    const charsRef = useRef<HTMLElement[] | null>(null);
 
     useFrameScroll(() => {
         const wrap = wrapRef.current;
@@ -433,14 +433,25 @@ export const AboutPanel: React.FC<{
             panel.style.transform = `translate3d(0,${(1 - e) * 0.6 * H}px,0) scale(${0.8 + 0.2 * e})`;
             panel.style.borderRadius = `${(1 - e) * 60}px`;
         }
-        const u = clamp((p - 0.3) / 0.65);
+        const u = clamp((p - 0.3) / 0.6);
         if (trackRef.current) trackRef.current.style.transform = `translate3d(0,${-ease(u) * 2 * H}px,0)`;
         if (marqueeRef.current) marqueeRef.current.style.opacity = String(clamp((p - 0.1) / 0.15));
         if (scaleRef.current) scaleRef.current.style.transform = `scale(${1.15 - 0.15 * clamp(u / 0.6)})`;
         if (parRef.current) parRef.current.style.transform = `translate3d(0,${-10 + 20 * u}%,0)`;
         if (tintRef.current) tintRef.current.style.opacity = String(clamp((u - 0.8) / 0.2));
         if (textRef.current) textRef.current.style.opacity = String(clamp((u - 0.7) / 0.25));
-        if (u > 0.85) setRevealed(true);
+        // narrative: characters resolve one by one as the scroll position advances
+        const text = textRef.current;
+        if (text) {
+            const chars = (charsRef.current ??= Array.from(text.querySelectorAll<HTMLElement>(".frame-char")));
+            const lead = clamp((u - 0.74) / 0.26) * (chars.length + 24);
+            chars.forEach((c, i) => {
+                const a = clamp((lead - i) / 24);
+                c.style.opacity = String(a);
+                c.style.transform = `translate3d(0,${(1 - a) * 12}px,0)`;
+                c.style.filter = a < 1 ? `blur(${(1 - a) * 4}px)` : "none";
+            });
+        }
     });
 
     if (reduced) {
@@ -538,7 +549,7 @@ export const AboutPanel: React.FC<{
                         {/* 3 · statement + narrative */}
                         <div className="flex h-screen items-center px-6 md:px-16 lg:px-24">
                             <div ref={textRef} className="mx-auto w-full max-w-[1500px] opacity-0">
-                                <AboutCopy heading={heading} narrative={narrative} on={revealed} />
+                                <AboutCopy heading={heading} narrative={narrative} on={false} />
                             </div>
                         </div>
                     </div>

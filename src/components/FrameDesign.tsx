@@ -92,6 +92,17 @@ const line = "border-[color:var(--f-line)]";
 const ghostPill = `inline-flex items-center justify-center rounded-full border px-6 py-3 text-sm font-semibold transition-colors hover:bg-[var(--f-hover)] ${line}`;
 const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--f-accent)]";
 
+// character-split title: each letter rises in on its own delay (first letter starts at `from` seconds)
+const Chars: React.FC<{ text: string; from: number }> = ({ text, from }) => (
+    <>
+        {Array.from(text).map((c, i) => (
+            <span key={i} className="frame-rise inline-block" style={{ "--d": `${(from + i * 0.045).toFixed(3)}s` } as React.CSSProperties}>
+                {c === " " ? <>&nbsp;</> : c}
+            </span>
+        ))}
+    </>
+);
+
 const Clock: React.FC = () => {
     const [now, setNow] = useState(() => clockFormat.format(new Date()));
     useEffect(() => {
@@ -206,7 +217,7 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                             <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--f-accent)]" />
                         </span>
                         <Clock />
-                        <span className={`hidden sm:inline ${muted}`}>DEHRADUN, IN</span>
+                        <span className={`hidden whitespace-nowrap sm:inline md:hidden lg:inline ${muted}`}>DEHRADUN, IN</span>
                     </div>
 
                     <nav aria-label="Frame sections" className="hidden items-center gap-8 md:flex">
@@ -238,7 +249,7 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                         >
                             {isDarkMode ? <FaSun /> : <FaMoon />}
                         </button>
-                        <button onClick={onExit} className={`hidden text-xs transition-colors hover:text-[color:var(--f-accent)] lg:block ${muted} ${focusRing}`}>
+                        <button onClick={onExit} className={`hidden text-xs transition-colors hover:text-[color:var(--f-accent)] md:block ${muted} ${focusRing}`}>
                             ‹ Portfolio
                         </button>
                         <button
@@ -311,15 +322,15 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                         aria-label="GenAI & Security Engineer"
                                         className={`${display} flex flex-col text-[clamp(64px,12vw,150px)] leading-[0.9] tracking-[-0.01em]`}
                                     >
-                                        <span aria-hidden="true" className="frame-rise block" style={{ "--d": "0s" } as React.CSSProperties}>
-                                            <span className="frame-shiny inline-block transition-transform duration-300 hover:translate-x-1">GenAI &amp;</span>
+                                        <span aria-hidden="true" className="block">
+                                            <span className="frame-shiny inline-block transition-transform duration-300 hover:translate-x-1">
+                                                <Chars text="GenAI &" from={0} />
+                                            </span>
                                         </span>
-                                        <span
-                                            aria-hidden="true"
-                                            className="frame-rise frame-outline-line flex items-center"
-                                            style={{ "--d": ".1s" } as React.CSSProperties}
-                                        >
-                                            <span className="frame-outline">Secu</span>
+                                        <span aria-hidden="true" className="frame-outline-line flex items-center">
+                                            <span className="frame-outline">
+                                                <Chars text="Secu" from={0.25} />
+                                            </span>
                                             <TitleIcon
                                                 label="See my projects"
                                                 onClick={() => goTo("work")}
@@ -327,10 +338,14 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                             >
                                                 <FaShieldAlt className="frame-pulse h-full w-full" />
                                             </TitleIcon>
-                                            <span className="frame-outline">rity</span>
+                                            <span className="frame-outline">
+                                                <Chars text="rity" from={0.55} />
+                                            </span>
                                         </span>
-                                        <span aria-hidden="true" className="frame-rise flex items-center" style={{ "--d": ".2s" } as React.CSSProperties}>
-                                            <span className="frame-shiny">Engi</span>
+                                        <span aria-hidden="true" className="flex items-center">
+                                            <span className="frame-shiny">
+                                                <Chars text="Engi" from={0.8} />
+                                            </span>
                                             <TitleIcon
                                                 label="Email me"
                                                 href={EMAIL}
@@ -338,7 +353,9 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                                             >
                                                 <FaRobot className="frame-sway h-full w-full" />
                                             </TitleIcon>
-                                            <span className="frame-shiny">neer</span>
+                                            <span className="frame-shiny">
+                                                <Chars text="neer" from={1.05} />
+                                            </span>
                                         </span>
                                     </h1>
                                 </div>
@@ -441,7 +458,7 @@ const FrameDesign: React.FC<FrameDesignProps> = ({ isDarkMode, toggleTheme, onEx
                     photo={profileImg}
                     marquee="Software Engineer"
                     heading="Agentic AI, built with guardrails. Software, built to scale. Security, built in."
-                    narrative="I'm a final-year B.Tech Computer Science student (Cybersecurity & Forensics) at UPES Dehradun, CGPA 7.43. I work across generative AI, full-stack development and security automation, and I like knowing what happens from the UI all the way down to the backend. Most recently I was a Software Engineering Intern at Ascendion."
+                    narrative="I'm a final-year B.Tech Computer Science student (Cybersecurity & Forensics) at UPES Dehradun. I work across generative AI, full-stack development and security automation, and I like knowing what happens from the UI all the way down to the backend. Most recently I was a Software Engineering Intern at Ascendion."
                 />
 
                 {/* Bottom half: effects live in FrameEffects.tsx */}

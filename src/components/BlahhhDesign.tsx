@@ -3,7 +3,9 @@ import { FaEnvelope, FaFilePdf, FaGithub, FaInstagram, FaLinkedin, FaMoon, FaSun
 import { SiLeetcode } from "react-icons/si";
 import { experiences } from "../data/experience";
 import { content } from "../data/roles";
-import { REPO_META, isFlagship, projectUrl } from "../data/repos";
+import { REPO_META, projectUrl } from "../data/repos";
+import { videoFor, type ProjectVideoMeta } from "../data/videos";
+import ProjectVideo from "./ui/ProjectVideo";
 import { fetchAllRepos } from "../utils/github";
 import type { Repo } from "../types";
 import profileImg from "../assets/profile-portrait.jpg";
@@ -110,6 +112,7 @@ interface WorkItem {
     year: number;
     live: boolean;
     url: string;
+    video?: ProjectVideoMeta;
 }
 
 const toWorkItem = (repo: Repo): WorkItem => {
@@ -122,6 +125,7 @@ const toWorkItem = (repo: Repo): WorkItem => {
         year: new Date(repo.updated_at).getFullYear(),
         live: !!repo.homepage?.trim(),
         url: projectUrl(repo),
+        video: videoFor(repo.name),
     };
 };
 
@@ -134,7 +138,7 @@ const initials = (title: string) =>
         .toUpperCase();
 
 // Original generated cover art: concentric rings + monogram on the row's pastel.
-const Cover: React.FC<{ item: WorkItem; color: string }> = ({ item, color }) => (
+const Cover: React.FC<{ item: WorkItem; color: string; open: boolean }> = ({ item, color, open }) => (
     <div className="bl-cover" style={{ background: color }}>
         <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke="#202025" strokeWidth="1">
             <circle cx="240" cy="40" r="30" />
@@ -149,6 +153,7 @@ const Cover: React.FC<{ item: WorkItem; color: string }> = ({ item, color }) => 
         <span className="bl-cover-chip">
             {item.lang} &middot; {item.year}
         </span>
+        {item.video && <ProjectVideo video={item.video} active={open} className="absolute inset-0 z-[3] h-full w-full rounded-none" />}
     </div>
 );
 
@@ -313,14 +318,21 @@ const BlahhhDesign: React.FC<BlahhhDesignProps> = ({ isDarkMode, toggleTheme, on
         id === "top" ? window.scrollTo({ top: 0 }) : document.getElementById(id)?.scrollIntoView({ block: "start" });
 
     const copyEmail = () => {
-        navigator.clipboard?.writeText(EMAIL_ADDRESS).catch(() => undefined);
-        setCopied(true);
-        window.clearTimeout(copyTimer.current);
-        copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
+        const done = () => {
+            setCopied(true);
+            window.clearTimeout(copyTimer.current);
+            copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
+        };
+        // Clipboard unavailable or denied: fall back to the mail client instead of a false "copied".
+        const fallback = () => {
+            window.location.href = EMAIL;
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText(EMAIL_ADDRESS).then(done, fallback);
+        else fallback();
     };
 
     // Flagship / live first (stable, so recency is kept inside each group), first 8.
-    const work = [...repos].sort((a, b) => Number(isFlagship(b)) - Number(isFlagship(a))).slice(0, 8).map(toWorkItem);
+    const work = repos.slice(0, 8).map(toWorkItem);
     const noteLink = (name: string) => {
         const repo = repos.find((r) => r.name === name);
         return repo ? projectUrl(repo) : `${GITHUB}/${name}`;
@@ -493,7 +505,7 @@ const BlahhhDesign: React.FC<BlahhhDesignProps> = ({ isDarkMode, toggleTheme, on
                                                     {item.live ? "Live on the web." : "Source is public on GitHub."} Last updated {item.year}.
                                                 </p>
                                             </div>
-                                            <Cover item={item} color={PASTELS[i % PASTELS.length]} />
+                                            <Cover item={item} color={PASTELS[i % PASTELS.length]} open={open} />
                                             <a className="bl-view" href={item.url} target="_blank" rel="noreferrer">
                                                 {item.live ? "View project" : "View on GitHub"} <span className="bl-arrow">&#8599;</span>
                                             </a>
@@ -520,7 +532,7 @@ const BlahhhDesign: React.FC<BlahhhDesignProps> = ({ isDarkMode, toggleTheme, on
                         </h2>
                         <p className="bl-about-p">{content.anyone}</p>
                         <p className="bl-about-p" style={{ marginTop: 12 }}>
-                            B.Tech CSE (Cybersecurity &amp; Forensics), UPES Dehradun &middot; CGPA 7.43
+                            B.Tech CSE (Cybersecurity &amp; Forensics), UPES Dehradun
                         </p>
                         <ul className="bl-caps">
                             {CAPABILITIES.map((c, i) => (

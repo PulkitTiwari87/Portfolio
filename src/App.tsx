@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import SidebarNavbar from "./components/Bar";
 import AboutMe from "./components/Aboutme";
 import Technologies from "./components/Technologies";
@@ -10,16 +10,13 @@ import Background from "./components/Background"; // Your custom background comp
 import GitHubProjects from "./components/GitHubProjects"; // New component for live GitHub projects
 import Activity from "./components/Activity"; // Last-30-days GitHub + LeetCode heatmaps
 import Contact from "./components/Contact";
-import AppleDesign from "./components/AppleDesign";
+import { currentDesignId, goToDesign } from "./data/designs";
 
-import FrameDesign from "./components/FrameDesign";
-import NerdDesign from "./components/NerdDesign";
-import BlahhhDesign from "./components/BlahhhDesign";
-
-const APPLE_ROUTE = "#/designs/apple";
-const FRAME_ROUTE = "#/designs/frame";
-const NERD_ROUTE = "#/designs/nerd";
-const BLAHHH_ROUTE = "#/designs/blahhh";
+// Design pages are loaded on demand so the main site bundle stays small.
+const AppleDesign = lazy(() => import("./components/AppleDesign"));
+const FrameDesign = lazy(() => import("./components/FrameDesign"));
+const NerdDesign = lazy(() => import("./components/NerdDesign"));
+const BlahhhDesign = lazy(() => import("./components/BlahhhDesign"));
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -57,51 +54,54 @@ const App: React.FC = () => {
     });
   };
 
-  if (hash === APPLE_ROUTE) {
+  // Empty hash = Apple (main page); "#/designs/v1" = original site (Version 1).
+  // Other hashes (e.g. "#contact" anchors on Version 1) keep the current design.
+  const design = currentDesignId(hash);
+
+  if (design === "apple") {
     return (
-      <AppleDesign
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        onExit={() => {
-          window.location.hash = "";
-        }}
-      />
+      <Suspense fallback={null}>
+        <AppleDesign
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+        />
+      </Suspense>
     );
   }
 
-  if (hash === FRAME_ROUTE) {
+  if (design === "frame") {
     return (
-      <FrameDesign
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        onExit={() => {
-          window.location.hash = "";
-        }}
-      />
+      <Suspense fallback={null}>
+        <FrameDesign
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          onExit={() => goToDesign("")}
+        />
+      </Suspense>
     );
   }
 
-  if (hash === NERD_ROUTE) {
+  if (design === "nerd") {
     return (
-      <NerdDesign
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        onExit={() => {
-          window.location.hash = "";
-        }}
-      />
+      <Suspense fallback={null}>
+        <NerdDesign
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          onExit={() => goToDesign("")}
+        />
+      </Suspense>
     );
   }
 
-  if (hash === BLAHHH_ROUTE) {
+  if (design === "blahhh") {
     return (
-      <BlahhhDesign
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        onExit={() => {
-          window.location.hash = "";
-        }}
-      />
+      <Suspense fallback={null}>
+        <BlahhhDesign
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          onExit={() => goToDesign("")}
+        />
+      </Suspense>
     );
   }
 

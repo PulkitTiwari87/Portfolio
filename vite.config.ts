@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path';
 
 // LeetCode's GraphQL endpoint sends no CORS headers, so the browser calls this same-origin path.
-// Production uses the equivalent rewrite in vercel.json.
+// Production uses the fixed-query Vercel Function in api/leetcode.ts (this dev proxy is localhost only).
 const leetcodeProxy = {
   '/api/leetcode': {
     target: 'https://leetcode.com',

@@ -15,17 +15,19 @@ A modern, dynamic professional portfolio showcasing software engineering experti
 - **Quantified experience**: Career milestones with measurable achievements, shared across all designs.
 - **Contact form**: Submissions go through Web3Forms, plus a social hub.
 - **Résumé**: `public/Pulkit_Tiwari_SDE.pdf` is linked from the site.
+- **Project videos**: Selected projects (SOAR Intelligence, GDriveX, NEO-Guard, NEO-Hazard-AI) have clickable demo videos in `public/videos/`; metadata is in `src/data/videos.ts`.
 
 ### Designs
 
 | Design | Route | What it is |
 | --- | --- | --- |
-| Default | `#/` (no hash) | The main single-page portfolio with the sidebar navigation |
-| Apple | `#/designs/apple` | Apple-style typography-led layout (port of a Stitch design) |
-| Frame | `#/designs/frame` | Bold editorial layout with CSS-variable theming |
-| NERD | `#/designs/nerd` | In progress: the route and menu entry are wired up, but the component (`src/components/NerdDesign.tsx`) is not in the repo yet |
+| Apple | `#/designs/apple` | Apple-style typography-led layout with handwritten "hello" intro (main page) |
+| Version 1 | `#/designs/v1` | Original sidebar portfolio with in-page navigation |
+| Frame | `#/designs/frame` | Editorial dark layout with lime accents and CSS-variable theming |
+| NERD | `#/designs/nerd` | Code-editor/terminal-inspired design with year-tab contribution graph |
+| Blahhh | `#/designs/blahhh` | Playful creative-studio design with themed interactions |
 
-The Apple and Frame designs reuse the shared data in `src/data/`; the Apple design also embeds the Activity section.
+All designs reuse the shared data in `src/data/`; the Apple design also embeds the Activity section.
 
 ## 🛠️ Technology Stack
 
@@ -43,13 +45,14 @@ src/
   App.tsx            Layout, theme state, hash routing to the alternative designs
   components/        Sections (Hero, Aboutme, Technologies, GitHubProjects, Activity,
                      Experience, Contact), Bar (sidebar + Designs menu),
-                     AppleDesign, FrameDesign, ui/ (visual effects)
+                     AppleDesign, FrameDesign, NerdDesign, BlahhhDesign, ui/ (visual effects)
   data/              Shared content: experience.ts, repos.ts (repo metadata and
-                     flagship rules), roles.ts (role-based intro text)
+                     flagship rules), roles.ts (role-based intro text), videos.ts
   utils/             github.ts (repo fetching), activity.ts (30-day GitHub + LeetCode data)
-public/              Static files, including the résumé PDF
+api/                 Vercel serverless functions (leetcode.ts proxy)
+public/              Static files: résumé PDF, project demo videos/
 vite.config.ts       Vite config and the /api/leetcode dev/preview proxy
-vercel.json          Production rewrite for /api/leetcode
+vercel.json          Production rewrite for /api/leetcode + security headers
 ```
 
 ## 📦 Getting Started

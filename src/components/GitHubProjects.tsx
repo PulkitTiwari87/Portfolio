@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchAllRepos } from '../utils/github';
 import type { Repo } from '../types';
-import { LANG_COLORS, REPO_META, isFlagship, projectUrl } from '../data/repos';
+import { LANG_COLORS, REPO_META, isFlagship, orderRepos, projectUrl } from '../data/repos';
 
 interface GitHubProjectsProps {
   isDarkMode: boolean;
@@ -163,7 +163,7 @@ const GitHubProjects: React.FC<GitHubProjectsProps> = ({ isDarkMode }) => {
           finalRepos.unshift(mockGDrive);
         }
 
-        setRepos(finalRepos);
+        setRepos(orderRepos(finalRepos));
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));

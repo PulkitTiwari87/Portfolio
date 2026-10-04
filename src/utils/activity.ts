@@ -9,8 +9,8 @@ export const LEETCODE_PROFILE_URL = `https://leetcode.com/u/${LEETCODE_USER}/`;
 
 export const WINDOW_DAYS = 30;
 
-// Same-origin path. Vite dev/preview proxy (vite.config.ts) and a Vercel rewrite (vercel.json)
-// forward it to https://leetcode.com/graphql, which sends no CORS headers.
+// Same-origin path. Dev/preview: Vite proxy (vite.config.ts). Production: Vercel function api/leetcode.ts
+// Both reach https://leetcode.com/graphql, which sends no CORS headers.
 const LEETCODE_ENDPOINT = '/api/leetcode';
 
 const CACHE_PREFIX = 'activity:v1:';

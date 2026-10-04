@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
 import { Link } from "react-scroll"; // Import Link for smooth scrolling
+import { DESIGNS, currentDesignId, goToDesign } from "../data/designs";
 
 // Define the type for the component's props
 interface SidebarNavbarProps {
@@ -9,7 +10,7 @@ interface SidebarNavbarProps {
 }
 
 const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }) => {
-    // State to track if the screen is mobile size (less than 768px)
+    // State to track if the screen is mobile size (less than 1024px)
     const [isMobile, setIsMobile] = useState<boolean>(false); // Initialize to false, update in useEffect
     // State to control the visibility of the sidebar menu
     const [menuVisible, setMenuVisible] = useState<boolean>(true); // Initialize to true for desktop, false for mobile based on resize
@@ -37,7 +38,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
     // Effect hook to handle window resizing for responsive behavior
     useEffect(() => {
         const handleResize = () => {
-            const isNowMobile: boolean = window.innerWidth < 768;
+            const isNowMobile: boolean = window.innerWidth < 1024; // matches Tailwind lg (content gets lg:ml-20)
             setIsMobile(isNowMobile);
             // If transitioning from mobile to desktop, ensure menu is visible
             // If transitioning from desktop to mobile, hide the menu
@@ -82,17 +83,17 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
             <div
                 className={`fixed inset-y-0 left-0 w-20 py-5 flex flex-col items-center justify-between transition-colors duration-300 ease-in-out z-[999] ${
                     isDarkMode ? "bg-transparent" : "bg-transparent" // Consider adding a background color if not transparent
-                } ${menuVisible ? "flex" : "hidden lg:flex"}`} 
+                } ${menuVisible ? `flex max-lg:w-44 max-lg:rounded-r-2xl max-lg:backdrop-blur-xl ${isDarkMode ? "max-lg:bg-black/85" : "max-lg:bg-white/90"}` : "hidden lg:flex"}`} 
             >
                 {/* Logo/Initial */}
                 <div
-                    className={`text-4xl font-bold mb-2.5 ${
+                    className={`text-4xl font-bold mb-2.5 max-lg:w-20 max-lg:self-start max-lg:text-center ${
                         isDarkMode ? "text-white" : "text-black"
                     } ${isMobile ? "cursor-pointer" : "cursor-default"}`}
                     onClick={handleLogoClick}
                 >
-                    {/* Only show 'P' if not on mobile, otherwise it's handled by the fixed toggle */}
-                    {!isMobile && "P"}
+                    {/* On mobile this P closes the open menu (the fixed toggle is hidden while open) */}
+                    P
                 </div>
 
                 {/* Navigation links */}
@@ -105,7 +106,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
                             duration={500}
                             spy={true} // Mark the link as active when scrolling
                             activeClass="font-bold opacity-100" // Class applied when link is active
-                            className={`relative text-sm opacity-70 transition-all duration-300 ease-in-out cursor-pointer group ${
+                            className={`relative max-lg:py-1 text-sm opacity-70 transition-all duration-300 ease-in-out cursor-pointer group ${
                                 isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black"
                             }`}
                             onClick={() => {
@@ -126,7 +127,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
                             onClick={() => setDesignsOpen((o) => !o)}
                             aria-haspopup="menu"
                             aria-expanded={designsOpen}
-                            className={`flex items-center gap-1 text-sm opacity-70 transition-all duration-300 ease-in-out cursor-pointer ${
+                            className={`flex items-center gap-1 max-lg:py-1 text-sm opacity-70 transition-all duration-300 ease-in-out cursor-pointer ${
                                 isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black"
                             }`}
                         >
@@ -137,61 +138,27 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
                             <div
                                 role="menu"
                                 className={`absolute left-full top-1/2 ml-4 min-w-[8rem] -translate-y-1/2 rounded-xl border p-1 backdrop-blur-xl ${
-                                    isDarkMode ? "border-white/10 bg-black/70" : "border-black/10 bg-white/80"
+                                    isDarkMode ? "border-white/10 bg-black/90" : "border-black/10 bg-white/95"
                                 }`}
                             >
-                                <button
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setDesignsOpen(false);
-                                        if (isMobile) setMenuVisible(false);
-                                        window.location.hash = "#/designs/apple";
-                                    }}
-                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
-                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
-                                    }`}
-                                >
-                                    Apple
-                                </button>
-                                <button
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setDesignsOpen(false);
-                                        if (isMobile) setMenuVisible(false);
-                                        window.location.hash = "#/designs/frame";
-                                    }}
-                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
-                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
-                                    }`}
-                                >
-                                    Frame
-                                </button>
-                                <button
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setDesignsOpen(false);
-                                        if (isMobile) setMenuVisible(false);
-                                        window.location.hash = "#/designs/nerd";
-                                    }}
-                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
-                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
-                                    }`}
-                                >
-                                    NERD
-                                </button>
-                                <button
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setDesignsOpen(false);
-                                        if (isMobile) setMenuVisible(false);
-                                        window.location.hash = "#/designs/blahhh";
-                                    }}
-                                    className={`block w-full rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
-                                        isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
-                                    }`}
-                                >
-                                    Blahhh
-                                </button>
+                                {DESIGNS.map((d) => (
+                                    <button
+                                        key={d.id}
+                                        role="menuitem"
+                                        aria-current={d.id === currentDesignId(window.location.hash) ? "page" : undefined}
+                                        onClick={() => {
+                                            setDesignsOpen(false);
+                                            if (isMobile) setMenuVisible(false);
+                                            goToDesign(d.hash);
+                                        }}
+                                        className={`flex w-full items-center justify-between gap-3 whitespace-nowrap rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                                            isDarkMode ? "text-gray-200 hover:bg-white/10" : "text-gray-800 hover:bg-black/5"
+                                        }`}
+                                    >
+                                        <span>{d.note === "Home" ? `${d.label} (Home)` : d.label}</span>
+                                        {d.id === currentDesignId(window.location.hash) && <span className="text-xs opacity-70">current ✓</span>}
+                                    </button>
+                                ))}
                             </div>
                         )}
                     </div>
@@ -200,7 +167,7 @@ const SidebarNavbar: React.FC<SidebarNavbarProps> = ({ toggleTheme, isDarkMode }
                 {/* Theme toggle button */}
                 <button
                     onClick={toggleTheme}
-                    className={`bg-transparent border-none cursor-pointer text-2xl transition-colors duration-300 ease-in-out ${
+                    className={`bg-transparent border-none cursor-pointer max-lg:p-2 text-2xl transition-colors duration-300 ease-in-out ${
                         isDarkMode ? "text-white" : "text-black"
                     }`}
                 >
